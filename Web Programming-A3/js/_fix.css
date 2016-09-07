@@ -1,0 +1,73 @@
+body
+{
+    background-color: #3e3e3e;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.pageMainContainer
+{
+    background-color: #607ed2;
+    /*
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    */
+}
+
+.fix_UpAndDownForZero
+{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.fix_pageHead
+{
+    /*background: url("../imgs/pageHead_RollingScreen/_1_pageHead.jpg");*/
+}
+
+.fix_NavBarAlpha
+{
+
+    border: none;
+}
+
+.fix_cloudsColor
+{
+    color:#ECF0F1;
+}
+
+.fixBigRect
+{
+    background-color: #2d2e31;
+}
+
+.tileLabelFixed_L
+{
+    font-size:large;
+    color: #ecf0f1;
+}
+
+.fixedWidth
+{
+    width: inherit;
+}
+
+.fixBottom
+{
+    margin-top: 5%;
+}
+
+.fixContent
+{
+    background-color: #587db5;
+}
+
+.fixIconInWideTitle
+{
+    position: inherit;
+    left: 39%;
+    top:22%;
+}

@@ -1,0 +1,13 @@
+variable name: 
+Username: username
+email: email
+user phone number: phonenumber
+Movie name: moviename
+Movie day: movieday
+Movie time: movietime
+Movie seat type: seat type + movieseat (such as: samovieseat, spmovieseat, b1movieseat....)
+Movie seat number: seat type+movieseat+num (such as: samovieseatnum, spmovieseatnum, b1movieseatnum...)
+Movie rank: movierank
+total ticket price: price
+different ticket type's price: TYPE's Name+PRICE (such as: saprice, spprice, b1price....)
+Movie Deal Voucher: moviedealvoucher

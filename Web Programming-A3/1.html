@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>及时验证</title>
+		<style>
+			#error{
+				color:red;
+				font-weight:bold;
+			}
+		</style>
+		<script type="text/javascript">
+	  // Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
+			function OnInput (event) {
+				//alert ("The new content: " + event.target.value);
+				var value = event.target.value;
+				checkusername(value);
+			}
+	  // Internet Explorer
+			function OnPropChanged (event) {
+			console.info(event)
+				if (event.propertyName.toLowerCase () == "value") {
+					var value = event.srcElement.value;
+					checkusername(value);
+				}
+			} 
+		//验证用户名方法(只能是数字字母和中文，不能包括特殊字符)
+		function checkusername(value){
+			var regex = /^[a-zA-Z]*$/;
+			if(regex.test(value) == true){
+				//格式正确
+				document.getElementById("error").innerHTML="";
+			}else{
+				//格式错误
+				document.getElementById("error").innerHTML="用户名格式错误，用户名由数字、字母、中文组成，不能包含特殊字符";
+			}
+		}
+		</script>
+	</head>
+	<body>
+		请输入用户名：
+		<input name="username" type="text" oninput="OnInput (event)" onpropertychange="OnPropChanged (event)" placeholder="数字、字母、汉字" /><label id="error"></label>
+	</body>
+</html>
