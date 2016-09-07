@@ -1,0 +1,8 @@
+application: data-rider-137910
+version: 1
+runtime: php55
+api_version: 1
+
+handlers:
+- url: /.*
+  script: index.html
