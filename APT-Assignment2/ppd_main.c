@@ -1,9 +1,9 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2016 Assignment #2
- * Full Name        : EDIT HERE
- * Student Number   : EDIT HERE
- * Course Code      : EDIT HERE
+ * Full Name        : Siyu Zang (Harold)
+ * Student Number   : S3534987
+ * Course Code      : COSC1076
  * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
@@ -29,6 +29,8 @@ int main(int argc, char **argv)
 	const char * inputCoinFile;
 	const char * inputStockFile;
 	BOOLEAN menuFlag;
+	BOOLEAN loadStock;
+	BOOLEAN loadCoins;
     /* uncomment this menu structure when you are ready to work on the 
      * menu system with function pointers
     struct menu_item menu[NUM_MENU_ITEMS];
@@ -48,8 +50,14 @@ int main(int argc, char **argv)
     inputStockFile = argv[STOCKFILE];
     inputCoinFile = argv[COINFILE];
     
-    load_stock(&system, inputStockFile);
-    load_coins(&system, inputCoinFile);
+    loadStock = load_stock(&system, inputStockFile);
+    loadCoins = load_coins(&system, inputCoinFile);
+    
+    /*If file is not valid, exit the program*/
+    if(loadStock == FALSE || loadCoins == FALSE){
+    	printf("Because the file is not valid, the program is stoped. Please input valid file.\n");
+    	return FALSE;
+    }
     
     system.coin_file_name = inputCoinFile;
     system.stock_file_name = inputStockFile;

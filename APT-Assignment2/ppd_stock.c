@@ -1,9 +1,9 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2016 Assignment #2
- * Full Name        : EDIT HERE
- * Student Number   : EDIT HERE
- * Course Code      : EDIT HERE
+ * Full Name        : Siyu Zang (Harold)
+ * Student Number   : S3534987
+ * Course Code      : COSC1076
  * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
@@ -65,7 +65,7 @@ int getTheLength(struct ppd_node * displayItem)
 	nextLength = 0;
 	
 	currentLength = strlen(displayItem->data->name);
-	printf("%s", displayItem->data->name);
+	
 	while(displayItem != NULL){
 		if (currentLength < nextLength){
 			currentLength = nextLength;
@@ -160,4 +160,44 @@ BOOLEAN addItem(struct ppd_list * stock_list, struct ppd_stock * newStock)
 	
 	return TRUE;
 	
+}
+
+BOOLEAN removeItem(struct ppd_list * stock_list, char * removeID)
+{
+	struct ppd_node * previousStockNode, * currentStockNode;
+	
+	previousStockNode = NULL;
+	currentStockNode = stock_list->head;
+	
+	while (currentStockNode != NULL){
+		
+		if(strcmp(removeID, currentStockNode->data->id) == 0){
+			break;
+		}
+		
+		previousStockNode = currentStockNode;
+		currentStockNode = currentStockNode->next;
+		}
+		
+		if(currentStockNode == NULL)
+    {
+        return FALSE;
+    }
+
+    if(previousStockNode == NULL)
+    {
+    	
+        stock_list->head = currentStockNode->next;
+    }
+    else
+    {
+    		printf("\"%s  %s    %s\" has been removed from the system.\n", currentStockNode->data->id, currentStockNode->data->name, currentStockNode->data->desc);
+        previousStockNode->next = currentStockNode->next;
+    }
+    stock_list->count--;
+    
+    free(currentStockNode->data);
+    free(currentStockNode);
+    
+	return TRUE;
 }

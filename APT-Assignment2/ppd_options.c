@@ -1,9 +1,9 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2016 Assignment #2
- * Full Name        : EDIT HERE
- * Student Number   : EDIT HERE
- * Course Code      : EDIT HERE
+ * Full Name        : Siyu Zang (Harold)
+ * Student Number   : S3534987
+ * Course Code      : COSC1076
  * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
@@ -180,32 +180,51 @@ BOOLEAN purchase_item(struct ppd_system * system)
 BOOLEAN save_system(struct ppd_system * system)
 {
     FILE * stock_file;
+    FILE * coin_file;
     struct ppd_node * current_stock;
+    int i;
     
     current_stock = system->item_list->head;
     
     stock_file = fopen(system->stock_file_name, "w");
+    coin_file = fopen(system->coin_file_name, "w");
     
     /*Check file is exist or not*/
     if(stock_file == NULL){
-    	printf("File is not exist!");
+    	printf("Stock File is not exist!");
     	return FALSE;
     }
     
-    /*use while loop to write file*/
+    /*Check file is exist or not*/
+    if(coin_file == NULL){
+    	printf("Coin File is not exist!");
+    	return FALSE;
+    }
+    
+    
+    /*use while loop to write stock file*/
     while(current_stock != NULL){
     	
     	/*write the data to file by using fprintf*/
-    	fprintf(stock_file, "%s|%s|%s|%d.%d|%d\n", current_stock->data->id, current_stock->data->name, current_stock->data->desc, current_stock->data->price.dollars, current_stock->data->price.cents, current_stock->data->on_hand);
+    	fprintf(stock_file, "%s|%s|%s|%d.%02d|%d\n", current_stock->data->id, current_stock->data->name, current_stock->data->desc, current_stock->data->price.dollars, current_stock->data->price.cents, current_stock->data->on_hand);
     	
     	current_stock = current_stock->next;
     	
+    }
+
+    /*use for loop to write coin file*/
+    for(i = NUM_DENOMS - 1; i >= 0; i--){
+    	  	
+    	/*write the data to file by using fprintf*/
+    	fprintf(coin_file, "%d,%d\n",system->cash_register[i].denom, system->cash_register[i].count);
+    		
     }
     
     /*Friendly display information*/
     printf("Save file Successfully!\n");
     
     fclose(stock_file);
+    fclose(coin_file);
     
     return FALSE;
 }
@@ -309,10 +328,12 @@ BOOLEAN remove_item(struct ppd_system * system)
     
     removeNode = searchStock(system, removeInputID);
     if(removeNode != NULL){
-    	printf("This is exist!");
+    	removeItem(system->item_list, removeInputID);
     }else{
-    	printf("Sorry, This item is not exist! Please Input correct Number!");
+    	printf("Sorry, This item is not exist! Please Input correct Number!\n");
+    	
     }
+    
     return TRUE;
 }
 
@@ -323,12 +344,20 @@ BOOLEAN remove_item(struct ppd_system * system)
  **/
 BOOLEAN reset_stock(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    struct ppd_node * resetStock;
+    int i;
+    
+    resetStock = system->item_list->head;
+    
+    for(i = 1; i <= system->item_list->count; i++){
+    	resetStock->data->on_hand = DEFAULT_STOCK_LEVEL;
+    	
+    	resetStock = resetStock->next;
+    }
+    
+    printf("Reset Stock successful!");
+    
+    return TRUE;
 }
 
 /**
@@ -338,12 +367,18 @@ BOOLEAN reset_stock(struct ppd_system * system)
  **/
 BOOLEAN reset_coins(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    
+    int i;
+    
+    for(i = 0; i < NUM_DENOMS; i++){
+    	
+    	system->cash_register[i].count = DEFAULT_COIN_COUNT;
+    	
+    }
+    
+    printf("Reset Coins successful!");
+    
+    return TRUE;
 }
 
 /**
@@ -353,12 +388,25 @@ BOOLEAN reset_coins(struct ppd_system * system)
  **/
 BOOLEAN display_coins(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    int i;
+    
+    printf("\nCoins Summary\n");
+    printf("-------------\n");
+    printf("Denomination \t| Count\n");
+    printf("\n");
+    /*Use for loop to display the coins*/
+    for(i = 0; i < NUM_DENOMS; i++){
+    	/*chect if denom less than 50, print cents, if more than 50, print dollar*/
+    	if (system->cash_register[i].denom <= 50){
+    		printf("%d ", system->cash_register[i].denom);
+    		printf("Cents \t");
+    		printf("| %d\n", system->cash_register[i].count);
+    	}else{
+    		printf("%d dollar\t| %d\n",system->cash_register[i].denom/100, system->cash_register[i].count);
+    	}
+    	
+    }
+    return TRUE;
 }
 
 BOOLEAN abort_program(struct ppd_system * system)

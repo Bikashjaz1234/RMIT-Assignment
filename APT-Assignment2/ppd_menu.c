@@ -1,9 +1,9 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2016 Assignment #2
- * Full Name        : EDIT HERE
- * Student Number   : EDIT HERE
- * Course Code      : EDIT HERE
+ * Full Name        : Siyu Zang (Harold)
+ * Student Number   : S3534987
+ * Course Code      : COSC1076
  * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
@@ -20,9 +20,7 @@
  **/
 void init_menu( struct menu_item* menu)
 {
-	
 	int i;
-	
 	
 	char* menuItem[] = 
 	{
@@ -44,7 +42,8 @@ void init_menu( struct menu_item* menu)
 }
 
 /*Display Menu Function*/
-void display_menu( struct menu_item* menu){
+void display_menu( struct menu_item* menu)
+{
 	int j;
 	
 	printf("\nMain Menu:\n");
@@ -59,6 +58,7 @@ void display_menu( struct menu_item* menu){
 	}
 	printf("Select your option (1-9):\n");
 	printf("=========================\n");
+	
 }
 
 /**

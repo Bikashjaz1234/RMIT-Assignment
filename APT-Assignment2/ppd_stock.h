@@ -1,9 +1,9 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2016 Assignment #2
- * Full Name        : EDIT HERE
- * Student Number   : EDIT HERE
- * Course Code      : EDIT HERE
+ * Full Name        : Siyu Zang (Harold)
+ * Student Number   : S3534987
+ * Course Code      : COSC1076
  * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
@@ -61,6 +61,8 @@
 #define ENDCHAR 2
 
 #define PRICELEN 8
+
+#define PRINTCOINSLEN 13
 
 /*the SPACE when print menu of each coloum*/
 /*for example: "ID | Name |..", there are 3 spaces*/
@@ -181,6 +183,8 @@ struct ppd_node * searchStock(struct ppd_system * , char *);
 int lastStockID(struct ppd_system *);
 
 BOOLEAN addItem(struct ppd_list *, struct ppd_stock *);
+
+BOOLEAN removeItem(struct ppd_list *, char *);
 
 #endif
 
