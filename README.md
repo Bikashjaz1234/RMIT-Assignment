@@ -1,8 +1,4 @@
 # RMIT-Assignment
-
-RMIT-CSIT-Assignment
-
-
 APT-Assignment1             94/100</br>
 APT-Assignment2             </br>
 CloudComputing-A1           15/15</br>
