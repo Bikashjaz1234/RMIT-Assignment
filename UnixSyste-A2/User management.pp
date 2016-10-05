@@ -3,18 +3,10 @@
 
 
 class usap_a2 {
-  notify { 'usap_a2 activated':
+  notify { 'usap_a2 Assignment':
   }
-  
-  group { 'sysadmin':
-    ensure => present,
-    system => true
-  }
-  
-  group { 'car':
-    ensure => present,
-  }
-  
+
+#1.a,b,c,d,e Create user name is becca, set her group, home dir, password, uid and shell.
   user { 'becca':
     ensure   => present,
     home     => '/home/becca',
@@ -23,4 +15,22 @@ class usap_a2 {
     uid      => 10014987,
     shell    => '/bin/bash',
   }
+
+#1.b Create the group
+  group { 'car':
+    ensure => present,
+  }
+
+#1.b Create the group
+  group { 'sysadmin':
+    ensure => present,
+    system => true
+  }
+
+#3.a,b,c,d,e Install these servers
+  package { ['openssl', 'httpd', 'mysql','strace', 'sudo']:
+    ensure => installed
+  }
+
+
 }
