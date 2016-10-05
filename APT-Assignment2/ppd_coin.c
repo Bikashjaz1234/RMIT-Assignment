@@ -66,3 +66,19 @@ enum denomination TransferDenom(int inputNumber)
 	return TRUE;
 
 }
+
+BOOLEAN checkCoin(int inputCoin)
+{
+	int check[] = {5, 10, 20, 50, 100, 200, 500, 1000};
+	int i;
+	float formatCoin;
+	
+	for (i = 0; i < NUM_DENOMS; i++){
+		if (check[i] == inputCoin){
+			return TRUE;
+		}
+	}
+	formatCoin = (float) inputCoin / 100;
+	printf("$%.02f is not a valid denomination of money!\n", formatCoin);
+	return FALSE;
+}

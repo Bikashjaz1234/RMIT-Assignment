@@ -7,6 +7,9 @@
 # Program Code     : EDIT HERE
 # Start up code provided by Paul Miller
 ########################################################################
+CC = gcc
+RM = rm -rf
+CFLAGS = -Wall -pedantic -ansi -g
 
 SOURCES=ppd_main.c ppd_menu.c ppd_options.c ppd_utility.c ppd_stock.c \
 ppd_coin.c
@@ -14,6 +17,17 @@ HEADERS=ppd_main.h ppd_menu.h ppd_options.h ppd_utility.h ppd_stock.h \
 ppd_coin.h
 README=ppd_readme
 MAKEFILE=Makefile
+EXECUTABLES = ppd
+
+all: $(SOURCES)
+	$(CC) $(CFLAGS) -o $(EXECUTABLES) $(SOURCES)
+
+g: $(SOURCES)
+	$(CC) $(CFLAGS) -g -o $(EXECUTABLES) $(SOURCES)
+
+test: $(SOURCES)
+	valgrind ./$(EXECUTABLES) --track-origins=yes --log-file log.txt
+	
 
 ########################################################################
 # Move this target to the end of the Makefile to zip up your code 
@@ -22,3 +36,6 @@ MAKEFILE=Makefile
 ########################################################################
 archive:
 	zip $(USER)-a2 $(SOURCES) $(HEADERS) $(README) $(MAKEFILE)
+
+clean:
+	$(RM) $(EXECUTABLES)

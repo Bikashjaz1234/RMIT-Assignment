@@ -10,6 +10,7 @@
  ***********************************************************************/
 
 #include "ppd_options.h"
+#include "ppd_utility.h"
 
 /**
  * @file ppd_options.c this is where you need to implement the main 
@@ -98,13 +99,20 @@ BOOLEAN purchase_item(struct ppd_system * system)
     /*refund money*/
     float refundMoney;
     char * moneyPtr;
+    /*creat a flag for check input*/
+    int flagCheck;
     
     refundMoney = 0;
+    flagCheck = 0;
     printf("\nPurchase Item\n");
     printf("--------------\n");
     printf("Please enter the id of the item you wish to purchase:");
     fgets(purchaseInput, PUR_BUFFER + ENDCHAR, stdin);
     delReturn = strlen(purchaseInput);
+    if(strcmp(purchaseInput, "\n") == 0){
+    		printf("Exit Purchase Item Function! Return to Main menu\n");
+    		return TRUE;
+    	}
     /*delete input 'return' character*/
     if(purchaseInput[delReturn - 1]=='\n'){
     	purchaseInput[delReturn - 1]=0;
@@ -126,15 +134,17 @@ BOOLEAN purchase_item(struct ppd_system * system)
     	/*Change Item money's format from 3.50 to 350*/
     	itemMoney = purNode->data->price.dollars * 100 + purNode->data->price.cents;
     	fgets(moneyInput, MONEY_BUFFER + ENDCHAR, stdin);
-
+    	
+    	/*if user input new line, exit prtchare function*/
     	if(strcmp(moneyInput, "\n") == 0){
     		printf("It will go to the menu, and you will receive refund $%.2f\n", refundMoney);
     		return TRUE;
     	}
+    	
     	money = (int) strtol(moneyInput, &moneyPtr, 10);
     	remainMoney = (float)itemMoney;
     	while (remainMoney > 0){
-    		if(money%5 == 0){
+    		if(money%5 == 0 && checkCoin(money)){
     			itemMoney = itemMoney - money;
     			remainMoney = (float)itemMoney / 100;
     			if(remainMoney <= 0){
@@ -151,13 +161,20 @@ BOOLEAN purchase_item(struct ppd_system * system)
     					money = (int) strtol(moneyInput, &moneyPtr, 10);   				
     			}
     		}else{
-    			printf("Invalid Input! Please input again!");
+    			printf("Invalid Input! Please input again.\n");
+    			if (flagCheck == 0){
+    				remainMoney = (float)remainMoney / 100;
+    				printf("You still need to give us:$%.2f:", remainMoney);
+    			}else{
+    				printf("You still need to give us:$%.2f:", remainMoney);
+    			}
     			fgets(moneyInput, MONEY_BUFFER + ENDCHAR, stdin);
     			money = (int) strtol(moneyInput, &moneyPtr, 10);
+    			flagCheck++;
     		}
     }
     if (remainMoney != 0){
-    remainMoney = remainMoney * (-1);
+    	remainMoney = remainMoney * (-1);
     }else{
     	remainMoney = remainMoney;
     }
@@ -258,7 +275,7 @@ BOOLEAN add_item(struct ppd_system * system)
    	printf("Enter the item description: ");
    	fgets(inputDesc, DESCLEN + ENDCHAR, stdin);
    	printf("Enter the price for this item: ");
-   	fgets(inputPrice, DESCLEN + ENDCHAR, stdin);
+   	fgets(inputPrice, PRICELEN + ENDCHAR, stdin);
     
     
     /*delete name 'return' character*/
@@ -282,9 +299,28 @@ BOOLEAN add_item(struct ppd_system * system)
     inputToken = strtok(inputToken, PRICE_SPLIT);
     		while (inputToken != NULL){
     			inputDollar = strtol(inputToken, &ptr, 10);
+    			/*check dollar's value*/
+    			if(inputDollar < 0){
+    				printf("Add new item is faild! The price is not valid!\n");
+    				printf("Return Main Menu!\n");
+    				return TRUE;
+    			}
     			
     			inputToken = strtok(NULL, PRICE_SPLIT);
+    			/*check next token is exist or not*/
+    			if(inputToken == NULL){
+    				printf("Add new item is faild! The price is not valid!\n");
+    				printf("Return Main Menu!\n");
+    				return TRUE;
+    			}
+    			
     			inputCent = strtol(inputToken, &ptr, 10);
+    			/*check cents value*/
+    			if(inputCent < 0 || inputCent % 5 != 0){
+    				printf("Add new item is faild! The price is not valid!\n");
+    				printf("Return Main Menu!\n");
+    				return TRUE;
+    			}
     			
     			inputToken = strtok(NULL, PRICE_SPLIT);
     		}
@@ -411,11 +447,7 @@ BOOLEAN display_coins(struct ppd_system * system)
 
 BOOLEAN abort_program(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-     printf("You about the program!!!!!\n");
+    printf("Free System.....You Exit the program.\n");
+    system_free(system);
     return FALSE;
 }

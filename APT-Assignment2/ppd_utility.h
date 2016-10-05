@@ -62,4 +62,6 @@ BOOLEAN load_coins(struct ppd_system *, const char *);
  * memory addresses.
  **/
 void system_free(struct ppd_system *);
+
+
 #endif

@@ -56,4 +56,6 @@ BOOLEAN init_coin(struct ppd_system *);
 
 enum denomination TransferDenom(int);
 
+BOOLEAN checkCoin(int);
+
 #endif

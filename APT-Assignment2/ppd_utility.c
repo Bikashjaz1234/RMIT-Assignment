@@ -266,5 +266,27 @@ BOOLEAN load_coins(struct ppd_system * system, const char * filename)
  **/
 void system_free(struct ppd_system * system)
 {
+	/*set 2 variables for current Node and next node*/
+	struct ppd_node * currentNode;
+	struct ppd_node * nextNode;
+	
+	/*set cuttent node value and set next node is null*/
+	currentNode = system->item_list->head;
+	nextNode = NULL;
+	
+	/*using while loop to free all node*/
+	while(currentNode != NULL)
+	{
+		/*free the current node's data*/
+		free(currentNode->data);	
+		nextNode = currentNode->next;
+		/*free current node*/
+		free(currentNode);
+		currentNode = nextNode;		
+	}
+	
+	/*free system list*/
+	free(system->item_list);	
+	
 
 }
