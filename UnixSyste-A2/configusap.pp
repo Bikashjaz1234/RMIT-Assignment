@@ -21,7 +21,7 @@ class usap_a2::config {
     source  => '/etc/puppetlabs/code/environments/production/modules/usap/httpd.conf',
   }
   
-#4.c becca can use sudo to a root shell
+#4.c becca can use sudo to a root shell.
   file { '/etc/sudoers':
     owner   => 'root',
     group   => 'root',
@@ -30,7 +30,7 @@ class usap_a2::config {
     source  => '/etc/puppetlabs/code/environments/production/modules/usap/sudoers',
   }
 
-#4.d set strace in every's shell
+#4.d set strace in every's shell.
   file { "/etc/profile.d/strace.sh":
     content => 'alias strace="/usr/bin/strace"',
   }
@@ -41,6 +41,11 @@ class usap_a2::config {
     group  => 'root',
     mode   => '0644',
     source => '/etc/puppetlabs/code/environments/production/modules/usap/hosts',
+  }
+  
+#6.Set-up output message.
+  exec { 'output_message':
+    command=>'/bin/echo Agent run starting at $(/usr/bin/date)',
   }
 
 }

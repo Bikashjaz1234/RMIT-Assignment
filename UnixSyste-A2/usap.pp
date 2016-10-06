@@ -31,6 +31,10 @@ class usap_a2 {
   package { ['openssl', 'httpd', 'mysql','strace', 'sudo']:
     ensure => installed
   }
+#make sure every server will be run
+  service { ['httpd', 'mysql']:
+    enable=>true,
+  }
 
 
 }
