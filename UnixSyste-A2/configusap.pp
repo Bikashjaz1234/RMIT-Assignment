@@ -48,4 +48,13 @@ class usap_a2::config {
     command=>'/bin/echo Agent run starting at $(/usr/bin/date)',
   }
 
+#7.
+
+#8. Use ERB template to set-up index.html webpage.
+  $student_number = 'S3534987'
+  file { '/var/www/index.html':
+    content => template('/etc/puppetlabs/code/environments/production/modules/usap/index.html.erb')
+  }
+
+
 }
