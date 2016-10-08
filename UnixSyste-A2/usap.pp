@@ -28,13 +28,18 @@ class usap_a2 {
   }
 
 #3.a,b,c,d,e Install these servers
-  package { ['openssl', 'httpd', 'mysql','strace', 'sudo']:
+#install Mysql repo first, then install mysql server
+  package { 'mysql':
+    ensure   => installed,
+    provider => 'rpm',
+    source   => 'http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm',
+}
+  package { ['openssh', 'httpd', 'strace', 'sudo', 'mysql-server']:
     ensure => installed
   }
-#make sure every server will be run
-  service { ['httpd', 'mysql']:
-    enable=>true,
+
+#6.Set-up output message.
+  exec { 'output_message':
+    command=>'/bin/echo Agent run starting at $(/usr/bin/date)',
   }
-
-
 }
