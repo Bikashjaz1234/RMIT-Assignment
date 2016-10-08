@@ -13,7 +13,7 @@ class usap_a2::config {
     source => '/etc/puppetlabs/code/environments/production/modules/usap/sshd_confg',
   }
   
-#4.b Set Apache’s document root to /var/www
+#4.b Set ApacheÕ document root to /var/www
   file { '/etc/httpd/conf/httpd.conf' :
     notify  => Service['httpd'],
     owner   => 'root',
@@ -80,3 +80,4 @@ service { 'mysqld':
     content => template('/etc/puppetlabs/code/environments/production/modules/usap/index.html.erb')
   }
 }
+
