@@ -82,3 +82,44 @@ BOOLEAN checkCoin(int inputCoin)
 	printf("$%.02f is not a valid denomination of money!\n", formatCoin);
 	return FALSE;
 }
+
+int* calCoin(float remainMoney)
+{
+	int calculate[] = {5, 10, 20, 50, 100, 200, 500, 1000};
+	int calRemainMoney;
+	static int remainArray[REMAIN_LEN];
+	int i, calTimes, k;
+	
+	/*set calculate remain money array is 0*/
+	for (k = 0; k < REMAIN_LEN; k++){
+		remainArray[k] = 0;
+	}
+	
+	/*set a variable for calcualte how many time it minus, and each time store the number to the array*/
+	calTimes = 0;
+	
+	/*chage the format from 1.50 to 150*/
+	remainMoney = remainMoney * (float)100;
+	calRemainMoney = (int) remainMoney;
+	
+	/*use while loop to calculate change*/
+	while (calRemainMoney > 0){
+		for (i = 0; i < NUM_DENOMS; i++){
+			/*compare the remain money, find which denom is bigger than it, and use previous one to minus the remain money*/
+			if (calRemainMoney < calculate[i] && i >0){
+				calRemainMoney = calRemainMoney -  calculate[i - 1];
+				/*store the previous denom to the array, which is change*/
+				remainArray[calTimes] = calculate[i-1];
+				calTimes++;
+				break;
+			/*if the remain money is 5, store the 5 to the array*/
+			}else if (calRemainMoney == calculate[0]){
+				calRemainMoney = calRemainMoney - calculate[0];
+				remainArray[calTimes] = calculate[0];
+				break;
+			}
+		} 
+	}
+
+	return remainArray;
+}

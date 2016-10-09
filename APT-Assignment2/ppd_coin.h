@@ -24,6 +24,7 @@
  **/
 #define NUM_DENOMS 8
 #define COIN_LINE 10
+#define REMAIN_LEN 10
 struct ppd_system;
 /**
  * enumeration representing the various types of currency available in
@@ -57,5 +58,7 @@ BOOLEAN init_coin(struct ppd_system *);
 enum denomination TransferDenom(int);
 
 BOOLEAN checkCoin(int);
+
+int* calCoin(float);
 
 #endif

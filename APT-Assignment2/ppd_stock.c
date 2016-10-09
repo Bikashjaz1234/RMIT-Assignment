@@ -186,7 +186,7 @@ BOOLEAN removeItem(struct ppd_list * stock_list, char * removeID)
 
     if(previousStockNode == NULL)
     {
-    	
+    		printf("\"%s  %s    %s\" has been removed from the system.\n", currentStockNode->data->id, currentStockNode->data->name, currentStockNode->data->desc);
         stock_list->head = currentStockNode->next;
     }
     else

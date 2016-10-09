@@ -101,6 +101,10 @@ BOOLEAN purchase_item(struct ppd_system * system)
     char * moneyPtr;
     /*creat a flag for check input*/
     int flagCheck;
+    /*array for calculate change*/
+    int* changeArray;
+    int calChangeMoney;
+
     
     refundMoney = 0;
     flagCheck = 0;
@@ -108,6 +112,8 @@ BOOLEAN purchase_item(struct ppd_system * system)
     printf("--------------\n");
     printf("Please enter the id of the item you wish to purchase:");
     fgets(purchaseInput, PUR_BUFFER + ENDCHAR, stdin);
+    /*check the input, if too long, it will return false*/
+    
     delReturn = strlen(purchaseInput);
     if(strcmp(purchaseInput, "\n") == 0){
     		printf("Exit Purchase Item Function! Return to Main menu\n");
@@ -178,8 +184,22 @@ BOOLEAN purchase_item(struct ppd_system * system)
     }else{
     	remainMoney = remainMoney;
     }
+
     purNode->data->on_hand = purNode->data->on_hand - 1;
-    printf("Thank you. Here is your %s, and your change of $%.2f.\n", purNode->data->name, remainMoney);
+    changeArray = calCoin(remainMoney);
+    
+    printf("Thank you. Here is your %s, and your change of $%.2f: ", purNode->data->name, remainMoney);
+    
+    /*calculate the chage, change the format if the money more than 100 cents. change 100 cents to 1 dollar*/
+    for (calChangeMoney = 0; calChangeMoney < REMAIN_LEN; calChangeMoney++){
+    	if (changeArray[calChangeMoney] < 100 && changeArray[calChangeMoney] != 0){
+    		printf("%dc ", changeArray[calChangeMoney]);
+    	}else if (changeArray[calChangeMoney] >= 100 && changeArray[calChangeMoney] != 0){
+    		changeArray[calChangeMoney] = changeArray[calChangeMoney] / 100;
+    		printf("$%d ", changeArray[calChangeMoney]);
+    	}
+    }
+    printf("\n");
     }else{
     	printf("Sorry, This item is not exist! Please Input correct Number!");
     	return purchase_item(system);
@@ -217,14 +237,12 @@ BOOLEAN save_system(struct ppd_system * system)
     	printf("Coin File is not exist!");
     	return FALSE;
     }
-    
-    
+      
     /*use while loop to write stock file*/
     while(current_stock != NULL){
     	
     	/*write the data to file by using fprintf*/
-    	fprintf(stock_file, "%s|%s|%s|%d.%02d|%d\n", current_stock->data->id, current_stock->data->name, current_stock->data->desc, current_stock->data->price.dollars, current_stock->data->price.cents, current_stock->data->on_hand);
-    	
+    	fprintf(stock_file, "%s|%s|%s|%d.%02d|%d\n", current_stock->data->id, current_stock->data->name, current_stock->data->desc, current_stock->data->price.dollars, current_stock->data->price.cents, current_stock->data->on_hand);  	
     	current_stock = current_stock->next;
     	
     }
@@ -239,7 +257,6 @@ BOOLEAN save_system(struct ppd_system * system)
     
     /*Friendly display information*/
     printf("Save file Successfully!\n");
-    
     fclose(stock_file);
     fclose(coin_file);
     
@@ -271,12 +288,39 @@ BOOLEAN add_item(struct ppd_system * system)
     printf("This new meal item will have the Item id of %s\n", inputID);
    	addStockItem = malloc(sizeof(struct ppd_stock));
    	printf("Enter the item name: ");
-   	fgets(inputName, NAMELEN + ENDCHAR, stdin);
+   	fgets(inputName, NAMELEN + ENDCHAR, stdin);	
+   	/*check the input, if too long, it will return false*/
+    if(strlen(inputName) > NAMELEN){
+    	printf("Your Input is too long!\n");
+    	read_rest_of_line();
+    }
+    if(inputName[strlen(inputName) - 1] != '\n'){
+    	read_rest_of_line();
+    }
+    
    	printf("Enter the item description: ");
-   	fgets(inputDesc, DESCLEN + ENDCHAR, stdin);
+   	fgets(inputDesc, DESCLEN + ENDCHAR, stdin);	
+   	/*check the input, if too long, it will return false*/
+    if(strlen(inputDesc) > DESCLEN){
+    	printf("Your Input is too long!\n");
+    	read_rest_of_line();
+    }
+    if(inputDesc[strlen(inputDesc) - 1] != '\n'){
+    	read_rest_of_line();
+    }
+     
    	printf("Enter the price for this item: ");
    	fgets(inputPrice, PRICELEN + ENDCHAR, stdin);
-    
+   	/*check the input, if too long, it will return false*/
+    if(strlen(inputPrice) > PRICELEN){
+    	read_rest_of_line();
+    	printf("Your Input is too long!\n");
+    	return add_item(system);
+    }
+    if(inputPrice[strlen(inputPrice) - 1] != '\n'){
+    	read_rest_of_line();
+    	return FALSE;
+    }  
     
     /*delete name 'return' character*/
     delReturn = strlen(inputName);
@@ -324,9 +368,7 @@ BOOLEAN add_item(struct ppd_system * system)
     			
     			inputToken = strtok(NULL, PRICE_SPLIT);
     		}
-    
-    
-    
+
     /*add the item data to the stock*/
     strcpy(addStockItem->id, inputID);
     strcpy(addStockItem->name, inputName);
@@ -355,19 +397,27 @@ BOOLEAN remove_item(struct ppd_system * system)
 		
     printf("Enter the item id of the item to remove from the menu: ");
     fgets(removeInputID, NAMELEN + ENDCHAR, stdin);
+    
     /*delete name 'return' character*/
     delReturn = strlen(removeInputID);
     if(removeInputID[delReturn - 1]=='\n'){
     	removeInputID[delReturn - 1]=0;
     }
     
-    
+    if(strlen(removeInputID) > IDLEN){
+    	printf("Your Input is too long!\n");
+    	return remove_item(system);
+    }
+    if(removeInputID[strlen(removeInputID) - 1] != '\n'){
+    	read_rest_of_line();
+    	return FALSE;
+    }
+     
     removeNode = searchStock(system, removeInputID);
     if(removeNode != NULL){
     	removeItem(system->item_list, removeInputID);
     }else{
     	printf("Sorry, This item is not exist! Please Input correct Number!\n");
-    	
     }
     
     return TRUE;
@@ -404,8 +454,7 @@ BOOLEAN reset_stock(struct ppd_system * system)
 BOOLEAN reset_coins(struct ppd_system * system)
 {
     
-    int i;
-    
+    int i;  
     for(i = 0; i < NUM_DENOMS; i++){
     	
     	system->cash_register[i].count = DEFAULT_COIN_COUNT;

@@ -27,7 +27,8 @@ g: $(SOURCES)
 
 test: $(SOURCES)
 	valgrind ./$(EXECUTABLES) --track-origins=yes --log-file log.txt
-	
+
+
 clean:
 	$(RM) $(EXECUTABLES)
 

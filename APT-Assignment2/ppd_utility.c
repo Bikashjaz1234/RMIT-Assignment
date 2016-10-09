@@ -174,7 +174,7 @@ BOOLEAN load_stock(struct ppd_system * system, const char * filename)
     		/*Check the ID is exist or not*/
     		checkRepeatNode = searchStock(system, inputID);
     		if(checkRepeatNode != NULL){
-    			printf("The item ID already exist, please check it.\n");
+    			printf("Load Stock file failed!! The item ID already exist, please check it.\n");
     			return FALSE;
     		}
     		
