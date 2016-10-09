@@ -42,5 +42,6 @@ class usap_a2 {
 #6.Set-up output message.
   exec { 'output_message':
     command=>'/bin/echo Agent run starting at $(/usr/bin/date)',
+    logoutput => true,
   }
 }

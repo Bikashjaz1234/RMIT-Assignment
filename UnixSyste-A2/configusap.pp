@@ -4,6 +4,14 @@ class usap_a2::config {
   notify { "usap_a2 Assignment Set-up Servers":
   }
 
+#2.puppet agent to check twice per hour (30mins once)
+  file { '/etc/puppetlabs/puppet/puppet.conf':
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
+    source  => '/etc/puppetlabs/code/environments/production/modules/usap/puppet.conf',
+  }
+
 #4.a root cannot login from SSH
   file {'/etc/ssh/sshd_config':
     notify  => Service['sshd'],
