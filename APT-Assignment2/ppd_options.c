@@ -186,7 +186,7 @@ BOOLEAN purchase_item(struct ppd_system * system)
     }
 
     purNode->data->on_hand = purNode->data->on_hand - 1;
-    changeArray = calCoin(remainMoney);
+    changeArray = calCoin(system, remainMoney);
     
     printf("Thank you. Here is your %s, and your change of $%.2f: ", purNode->data->name, remainMoney);
     

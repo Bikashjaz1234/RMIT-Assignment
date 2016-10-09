@@ -59,6 +59,6 @@ enum denomination TransferDenom(int);
 
 BOOLEAN checkCoin(int);
 
-int* calCoin(float);
+int* calCoin(struct ppd_system *, float);
 
 #endif

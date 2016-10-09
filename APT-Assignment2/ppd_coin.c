@@ -83,11 +83,13 @@ BOOLEAN checkCoin(int inputCoin)
 	return FALSE;
 }
 
-int* calCoin(float remainMoney)
+int* calCoin(struct ppd_system * system, float remainMoney)
 {
+
 	int calculate[] = {5, 10, 20, 50, 100, 200, 500, 1000};
 	int calRemainMoney;
 	static int remainArray[REMAIN_LEN];
+	/*Create i and k variable for "for loop"*/
 	int i, calTimes, k;
 	
 	/*set calculate remain money array is 0*/
@@ -107,15 +109,35 @@ int* calCoin(float remainMoney)
 		for (i = 0; i < NUM_DENOMS; i++){
 			/*compare the remain money, find which denom is bigger than it, and use previous one to minus the remain money*/
 			if (calRemainMoney < calculate[i] && i >0){
-				calRemainMoney = calRemainMoney -  calculate[i - 1];
-				/*store the previous denom to the array, which is change*/
-				remainArray[calTimes] = calculate[i-1];
-				calTimes++;
-				break;
+				/*if current coine count is 0, do a for loop, find which previous one is not. (Because maybe 1$, 50c count are 0 at same time*/
+				if(system->cash_register[i - 1].count == 0){
+					for(k = 1; k <= i; k++){
+						/*if previous one is not 0, do calculate*/
+						if(system->cash_register[i - k].count != 0){
+							calRemainMoney = calRemainMoney -  calculate[i - k];
+							system->cash_register[i - k].count--;
+							/*store the previous denom to the array, which is change*/
+							remainArray[calTimes] = calculate[i-k];
+							calTimes++;
+							break;
+						}
+					}
+					break;
+				}else{
+					calRemainMoney = calRemainMoney -  calculate[i - 1];
+					/*if use the coine, minus one from the system*/
+					system->cash_register[i - 1].count--;
+					/*store the previous denom to the array, which is change*/
+					remainArray[calTimes] = calculate[i-1];
+					calTimes++;
+					break;
+			}
 			/*if the remain money is 5, store the 5 to the array*/
 			}else if (calRemainMoney == calculate[0]){
 				calRemainMoney = calRemainMoney - calculate[0];
 				remainArray[calTimes] = calculate[0];
+				/*if use the coine, minus one from the system*/
+				system->cash_register[0].count--;
 				break;
 			}
 		} 
