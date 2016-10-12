@@ -48,7 +48,7 @@ SyslogFacility AUTHPRIV
 #LoginGraceTime 2m
 
 #Disable root login
-PermitRootLogin on
+#PermitRootLogin on
 
 #StrictModes yes
 #MaxAuthTries 6

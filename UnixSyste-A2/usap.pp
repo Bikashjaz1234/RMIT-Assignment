@@ -10,8 +10,9 @@ class usap_a2 {
   user { 'becca':
     ensure   => present,
     home     => '/home/becca',
+    managehome => true,
     groups   => ['sysadmin', 'car'],
-    password => 'rmit',
+    password => '$1$yOinka7J$9T1qjnwKkY4EaVFX6W2hy/',
     uid      => 10014987,
     shell    => '/bin/bash',
   }
