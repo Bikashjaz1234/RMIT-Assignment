@@ -64,6 +64,8 @@
 
 #define PRINTCOINSLEN 13
 
+#define RESETENDCHAR 1
+
 /*the SPACE when print menu of each coloum*/
 /*for example: "ID | Name |..", there are 3 spaces*/
 #define SPACETIMES 8

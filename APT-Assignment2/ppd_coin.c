@@ -69,10 +69,12 @@ enum denomination TransferDenom(int inputNumber)
 
 BOOLEAN checkCoin(int inputCoin)
 {
+	/*use array to store coin's type*/
 	int check[] = {5, 10, 20, 50, 100, 200, 500, 1000};
 	int i;
 	float formatCoin;
 	
+	/*use for loop to check input coin is valid or not*/
 	for (i = 0; i < NUM_DENOMS; i++){
 		if (check[i] == inputCoin){
 			return TRUE;

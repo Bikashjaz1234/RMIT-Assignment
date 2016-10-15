@@ -21,6 +21,7 @@
 #define NUM_MANAGE 6
 #define NUM_MENU_ITEMS NUM_USER + NUM_MANAGE
 #define INPUT_BUFFER 100
+#define MENU_LENG 3
 /**
  * The maximum length of a menu item's text
  **/

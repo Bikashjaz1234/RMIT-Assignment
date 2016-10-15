@@ -28,6 +28,7 @@ void init_menu( struct menu_item* menu)
 	"5.Remove Item", "6.Display Coins", "7.Reset Stock", "8.Reset Coins", "9.Abort Program"
 	};
   
+  /*use function pointer to create menu*/
   BOOLEAN (*menu_function[])(struct ppd_system*) = 
   {
   	display_items, purchase_item, save_system, add_item, 
@@ -74,7 +75,7 @@ menu_function get_menu_choice(struct menu_item * menu)
   display_menu(menu);
   fgets(menuInput, INPUT_BUFFER + ENDCHAR, stdin);
    /*Validation input size*/
-  if (strlen(menuInput) > 3){
+  if (strlen(menuInput) > MENU_LENG){
   	printf("Please input a valid number! (1-9)\n");
   	return get_menu_choice(menu);
   }

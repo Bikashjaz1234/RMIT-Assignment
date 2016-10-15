@@ -31,11 +31,6 @@ int main(int argc, char **argv)
 	BOOLEAN menuFlag;
 	BOOLEAN loadStock;
 	BOOLEAN loadCoins;
-    /* uncomment this menu structure when you are ready to work on the 
-     * menu system with function pointers
-    struct menu_item menu[NUM_MENU_ITEMS];
-    */
-    /* validate command line arguments */
     
     struct menu_item menu[NUM_MENU_ITEMS];
 
@@ -69,16 +64,6 @@ int main(int argc, char **argv)
     while(menuFlag == TRUE){
     menuFlag = get_menu_choice(menu)(&system);
     }
-
-    /* loop, asking for options from the menu */
-
-    /* run each option selected */
-
-    /* until the user quits */
-
-    /* make sure you always free all memory and close all files 
-     * before you exit the program
-     */
 
     return EXIT_SUCCESS;
 }

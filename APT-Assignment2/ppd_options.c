@@ -42,8 +42,6 @@ BOOLEAN display_items(struct ppd_system * system)
 	/*get the "price" length*/
 	priceLength = strlen("Price");
 	
-	
-	
 	/*Check there has data or not*/
 	if(displayItem == NULL){
 		printf("Do not have any data!\n");
@@ -105,20 +103,29 @@ BOOLEAN purchase_item(struct ppd_system * system)
     int* changeArray;
     int calChangeMoney;
 
-    
+ 		/*init variables*/
     refundMoney = 0;
     flagCheck = 0;
+    
     printf("\nPurchase Item\n");
     printf("--------------\n");
     printf("Please enter the id of the item you wish to purchase:");
     fgets(purchaseInput, PUR_BUFFER + ENDCHAR, stdin);
-    /*check the input, if too long, it will return false*/
     
+    /*check the input, if too long, it will return false*/
+  	if(purchaseInput[strlen(purchaseInput) - RESETENDCHAR] != '\n'){
+  		printf("Your Input is too long! Return Main Menu....\n");
+    	read_rest_of_line();
+    	return TRUE;
+    }
+    
+    /*return menu is user input return*/  
     delReturn = strlen(purchaseInput);
     if(strcmp(purchaseInput, "\n") == 0){
     		printf("Exit Purchase Item Function! Return to Main menu\n");
     		return TRUE;
     	}
+    	
     /*delete input 'return' character*/
     if(purchaseInput[delReturn - 1]=='\n'){
     	purchaseInput[delReturn - 1]=0;
@@ -289,38 +296,50 @@ BOOLEAN add_item(struct ppd_system * system)
    	addStockItem = malloc(sizeof(struct ppd_stock));
    	printf("Enter the item name: ");
    	fgets(inputName, NAMELEN + ENDCHAR, stdin);	
-   	/*check the input, if too long, it will return false*/
-    if(strlen(inputName) > NAMELEN){
-    	printf("Your Input is too long!\n");
+
+    /*check the input, if too long, it will return menu*/
+  	if(inputName[strlen(inputName) - RESETENDCHAR] != '\n'){
+  		printf("Your Input is too long! Return Main Menu....\n");
     	read_rest_of_line();
+    	return TRUE;
     }
-    if(inputName[strlen(inputName) - 1] != '\n'){
-    	read_rest_of_line();
+    /*input new line, go to main menu*/
+    if(strcmp(inputName, "\n") == 0){
+    	printf("Your Input new line! Return Main Menu....\n");
+    	return TRUE;
     }
     
    	printf("Enter the item description: ");
    	fgets(inputDesc, DESCLEN + ENDCHAR, stdin);	
-   	/*check the input, if too long, it will return false*/
-    if(strlen(inputDesc) > DESCLEN){
-    	printf("Your Input is too long!\n");
+
+  	/*check the input, if too long, it will return menu*/
+  	if(inputDesc[strlen(inputDesc) - RESETENDCHAR] != '\n'){
+  		printf("Your Input is too long! Return Main Menu....\n");
     	read_rest_of_line();
+    	return TRUE;
     }
-    if(inputDesc[strlen(inputDesc) - 1] != '\n'){
-    	read_rest_of_line();
+    
+    /*input new line, go to main menu*/
+    if(strcmp(inputDesc, "\n") == 0){
+    	printf("Your Input new line! Return Main Menu....\n");
+    	return TRUE;
     }
-     
+  	
    	printf("Enter the price for this item: ");
    	fgets(inputPrice, PRICELEN + ENDCHAR, stdin);
-   	/*check the input, if too long, it will return false*/
-    if(strlen(inputPrice) > PRICELEN){
+
+  	/*check the input, if too long, it will return menu*/
+  	if(inputPrice[strlen(inputPrice) - RESETENDCHAR] != '\n'){
+  		printf("Your Input is too long! Return Main Menu....\n");
     	read_rest_of_line();
-    	printf("Your Input is too long!\n");
-    	return add_item(system);
+    	return TRUE;
     }
-    if(inputPrice[strlen(inputPrice) - 1] != '\n'){
-    	read_rest_of_line();
-    	return FALSE;
-    }  
+    
+    /*input new line, go to main menu*/
+    if(strcmp(inputPrice, "\n") == 0){
+    	printf("Your Input new line! Return Main Menu....\n");
+    	return TRUE;
+    }
     
     /*delete name 'return' character*/
     delReturn = strlen(inputName);
@@ -398,21 +417,18 @@ BOOLEAN remove_item(struct ppd_system * system)
     printf("Enter the item id of the item to remove from the menu: ");
     fgets(removeInputID, NAMELEN + ENDCHAR, stdin);
     
+    /*input new line, go to main menu*/
+    if(strcmp(removeInputID, "\n") == 0){
+    	printf("Your Input new line! Return Main Menu....\n");
+    	return TRUE;
+    }
+    
     /*delete name 'return' character*/
     delReturn = strlen(removeInputID);
     if(removeInputID[delReturn - 1]=='\n'){
     	removeInputID[delReturn - 1]=0;
     }
-    
-    if(strlen(removeInputID) > IDLEN){
-    	printf("Your Input is too long!\n");
-    	return remove_item(system);
-    }
-    if(removeInputID[strlen(removeInputID) - 1] != '\n'){
-    	read_rest_of_line();
-    	return FALSE;
-    }
-     
+
     removeNode = searchStock(system, removeInputID);
     if(removeNode != NULL){
     	removeItem(system->item_list, removeInputID);
