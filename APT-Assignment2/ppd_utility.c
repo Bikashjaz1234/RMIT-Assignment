@@ -73,7 +73,6 @@ BOOLEAN load_stock(struct ppd_system * system, const char * filename)
     	
     }
     
-    
     /*Read the file*/
     while(fgets(stockLine, STOCK_LINE_LENGTH + ENDCHAR, stockFile) != NULL){
     	newStock = malloc(sizeof(struct ppd_stock));
@@ -184,7 +183,7 @@ BOOLEAN load_stock(struct ppd_system * system, const char * filename)
     	}
     
     }
-    
+    fclose(stockFile);
     return TRUE;
 }
 
@@ -255,7 +254,7 @@ BOOLEAN load_coins(struct ppd_system * system, const char * filename)
     	
     	system->cash_register[denomNumber] = loadCoins;
     }
-    
+    fclose(coinsFile);
     return TRUE;
 
 }

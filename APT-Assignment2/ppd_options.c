@@ -154,15 +154,21 @@ BOOLEAN purchase_item(struct ppd_system * system)
     		return TRUE;
     	}
     	
+    	/*calculate remain money*/
     	money = (int) strtol(moneyInput, &moneyPtr, 10);
     	remainMoney = (float)itemMoney;
+    	
+    	/*continue run until remain money equal 0*/
     	while (remainMoney > 0){
+    		/*money that user input must can be Divided by 5, and remainder is 0, and also check the coin is exist or not*/
     		if(money%5 == 0 && checkCoin(money)){
     			itemMoney = itemMoney - money;
     			remainMoney = (float)itemMoney / 100;
     			if(remainMoney <= 0){
+    				/*remain money less than 0, stop run*/
     				break;
     			}else{
+    				/*if remain money is not 0, this means that the user still need to pay money*/
     					printf("You still need to give us:$%.2f:", remainMoney);
     					fgets(moneyInput, MONEY_BUFFER + ENDCHAR, stdin);
     					if(strcmp(moneyInput, "\n") == 0){
@@ -173,6 +179,7 @@ BOOLEAN purchase_item(struct ppd_system * system)
     					}
     					money = (int) strtol(moneyInput, &moneyPtr, 10);   				
     			}
+    			/*if the coine type is not exist, show error message*/
     		}else{
     			printf("Invalid Input! Please input again.\n");
     			if (flagCheck == 0){
@@ -186,6 +193,7 @@ BOOLEAN purchase_item(struct ppd_system * system)
     			flagCheck++;
     		}
     }
+    /*Multiplied by -1 to make sure that the remain money is positive number*/
     if (remainMoney != 0){
     	remainMoney = remainMoney * (-1);
     }else{
@@ -415,8 +423,13 @@ BOOLEAN remove_item(struct ppd_system * system)
 		int delReturn;
 		
     printf("Enter the item id of the item to remove from the menu: ");
-    fgets(removeInputID, NAMELEN + ENDCHAR, stdin);
-    
+    fgets(removeInputID, OPT_BUFFER + ENDCHAR, stdin);
+    /*check the input, if too long, it will return menu*/
+  	if(removeInputID[strlen(removeInputID) - RESETENDCHAR] != '\n'){
+  		printf("Your Input is too long! Return Main Menu....\n");
+    	read_rest_of_line();
+    	return TRUE;
+    } 
     /*input new line, go to main menu*/
     if(strcmp(removeInputID, "\n") == 0){
     	printf("Your Input new line! Return Main Menu....\n");
@@ -433,7 +446,7 @@ BOOLEAN remove_item(struct ppd_system * system)
     if(removeNode != NULL){
     	removeItem(system->item_list, removeInputID);
     }else{
-    	printf("Sorry, This item is not exist! Please Input correct Number!\n");
+    	printf("Sorry, Your input is not valid or this item is not exist! Please Input correct Number!\n");
     }
     
     return TRUE;
@@ -451,6 +464,7 @@ BOOLEAN reset_stock(struct ppd_system * system)
     
     resetStock = system->item_list->head;
     
+    /*use for loop to reset the stock*/
     for(i = 1; i <= system->item_list->count; i++){
     	resetStock->data->on_hand = DEFAULT_STOCK_LEVEL;
     	
@@ -473,6 +487,7 @@ BOOLEAN reset_coins(struct ppd_system * system)
     int i;  
     for(i = 0; i < NUM_DENOMS; i++){
     	
+    	/*use for loop to reset the coin*/
     	system->cash_register[i].count = DEFAULT_COIN_COUNT;
     	
     }

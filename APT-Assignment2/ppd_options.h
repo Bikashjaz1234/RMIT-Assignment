@@ -10,13 +10,19 @@
  ***********************************************************************/
 
 #include "ppd_main.h"
-#define PUR_BUFFER 100
+/**
+ * The length of money input in the system 
+ **/
 #define MONEY_BUFFER 5
+/**
+ * The length of option input in the system 
+ **/
+#define OPT_BUFFER 200
 /**
  * @file ppd_options.h declares all functions to implement the menu
  * options that can be called from the main menu. 
  **/
-
+#define PUR_BUFFER 100
 /**
  * This option allows the user to request a display of the items 
  * available for purchase. This is the data loaded into the linked 

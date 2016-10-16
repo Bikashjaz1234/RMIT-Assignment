@@ -57,11 +57,17 @@
 #define NUM_DENOMS 8
 
 #define FIRSTCHAR 0
-
+/**
+ * The number of the end character in the system 
+ **/
 #define ENDCHAR 2
-
+/**
+ * The length of the price in the system 
+ **/
 #define PRICELEN 8
-
+/**
+ * The length of the price's coins in the system 
+ **/
 #define PRINTCOINSLEN 13
 
 #define RESETENDCHAR 1

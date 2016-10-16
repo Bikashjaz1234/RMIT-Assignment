@@ -13,6 +13,9 @@
 #include "ppd_main.h"
 #ifndef PPD_UTILITY
 #define PPD_UTILITY
+/**
+ * The length of stock and coin file for each line in the system 
+ **/
 #define STOCK_LINE_LENGTH 800
 #define COIN_LINE_LENGTH 80
 /**

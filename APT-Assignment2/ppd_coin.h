@@ -18,12 +18,19 @@
  **/
 #ifndef PPD_COIN
 #define PPD_COIN
+/**
+ * The character that use to split coin file
+ **/
 #define COIN_DELIM ","
 /**
  * The number of denominations of currency available in the system 
  **/
 #define NUM_DENOMS 8
+
 #define COIN_LINE 10
+/**
+ * The length of remain money in the system 
+ **/
 #define REMAIN_LEN 10
 struct ppd_system;
 /**
