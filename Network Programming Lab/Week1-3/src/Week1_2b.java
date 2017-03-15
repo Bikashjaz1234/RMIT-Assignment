@@ -27,6 +27,7 @@ public class Week1_2b {
  
                 // writing to output buffer
                 bufferOut.write(buffer);
+               
             }
             System.out.println("File uncompress successfully");
         } catch (FileNotFoundException e) {

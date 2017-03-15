@@ -15,7 +15,7 @@ public class Week1_b {
 		// Using for loop to read the file
 		for(char a : c)
 	         System.out.print(a);   // output the characters one by one
-	      fr.close();
+	      fr.close(); //close the buffer.
 		}catch (FileNotFoundException e) {
             System.out.println("Input file is not found");
         } catch (IOException e) {
