@@ -117,6 +117,7 @@ public class NearestNeighFileBased {
                         if (!agent.addPoint(point)) {
                             writer.println("Add point failed.");
                         }
+                        
                         break;
                     // delete
                     case "D":

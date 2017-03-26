@@ -13,6 +13,7 @@ public class NaiveNN implements NearestNeigh{
     @Override
     public void buildIndex(List<Point> points) {
         // To be implemented.
+    	
     }
 
     @Override
@@ -24,13 +25,15 @@ public class NaiveNN implements NearestNeigh{
     @Override
     public boolean addPoint(Point point) {
         // To be implemented.
-        return false;
+    	System.out.print(point.id);
+        return true;
     }
 
     @Override
     public boolean deletePoint(Point point) {
         // To be implemented.
-        return false;
+    	this.deletePoint(point);
+        return true;
     }
 
     @Override
