@@ -25,14 +25,20 @@ public class NaiveNN implements NearestNeigh{
     public List<Point> search(Point searchTerm, int k) {
         // To be implemented.
         double currentDistance;
+        // New List for store the search Result
         searchingResult = new ArrayList<Point>();
         largestDistance = 0.00;
+        // Use a new way to write the for loop
+        // for(declaration : expression)
         for (Point temp_point : naiveList) {
+        	// If the Category same, continue.
           if(!temp_point.cat.equals(searchTerm.cat)){
             continue;
           }
+          //Computes the distance between two Points
           currentDistance = temp_point.distTo(searchTerm);
           if(k > 0){
+        	//add to search result
             searchingResult.add(temp_point);
             if(currentDistance > largestDistance){
               largestDistance = currentDistance;
@@ -44,7 +50,7 @@ public class NaiveNN implements NearestNeigh{
                searchingResult.remove(largestDistancePoint);
                largestDistancePoint = temp_point;
                largestDistance = currentDistance;
-               //findout another largestDistance
+               //find out another largestDistance
                for (Point temp_result_point : searchingResult) {
                  double temp_currentDistance = temp_result_point.distTo(searchTerm);
                  if(temp_currentDistance > largestDistance){
@@ -87,6 +93,7 @@ public class NaiveNN implements NearestNeigh{
     @Override
     public boolean isPointIn(Point point) {
         // To be implemented.
+    	// For loop to find the point that we want
         for (Point temp_point : naiveList) {
           if(temp_point.equals(point)){
              return true;
