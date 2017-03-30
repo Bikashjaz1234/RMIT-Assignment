@@ -82,7 +82,7 @@ def appendOperations():
     lineGen = list()
 
     # Add
-    perc = 100 * float(OP_PERC.get('ADD') / float(NUM_ENTRIES))
+    perc = (OP_PERC.get('ADD') * NUM_ENTRIES) / 100
 
     for i in xrange(int(perc)):
         rand = generateRandomNum(0, len(POINT_LIST))
@@ -93,7 +93,7 @@ def appendOperations():
 
 
     # Search
-    perc = 100 * float(OP_PERC.get('SEARCH') / float(NUM_ENTRIES))
+    perc = (OP_PERC.get('SEARCH') * NUM_ENTRIES) / 100
 
     for i in xrange(int(perc)):
         rand = generateRandomNum(0, len(POINT_LIST))
@@ -104,7 +104,7 @@ def appendOperations():
 
 
     # Delete
-    perc = 100 * float(OP_PERC.get('DEL') / float(NUM_ENTRIES))
+        perc = (OP_PERC.get('DEL') * NUM_ENTRIES) / 100
 
     for i in xrange(int(perc)):
         rand = generateRandomNum(0, len(POINT_LIST))
@@ -114,7 +114,7 @@ def appendOperations():
         POINT_LIST[rand] = "D " + str(POINT_LIST[rand])
 
     # Check
-    perc = 100 * float(OP_PERC.get('CHECK') / float(NUM_ENTRIES))
+        perc = (OP_PERC.get('CHECK') * NUM_ENTRIES) / 100
 
     for i in xrange(int(perc)):
         rand = generateRandomNum(0, len(POINT_LIST))
@@ -148,11 +148,19 @@ while (i < scCount):
 
     FILE_NAME = CF_LIST[i]['sName'] + "-" + str(NUM_ENTRIES)
     K = CF_LIST[i]['SK']
-    print "RG: ", CF_LIST[i]['RG']
+
     if (CF_LIST[i]['RG'] == "T"):
-        print ("random file requested")
+
         generatePoints()
         writeDataFile("random")
+        POINTS.clear()
+
+        generatePoints()
+        POINT_LIST = list(POINTS)
+        appendOperations()
+        writeToFile()
+
+        del POINT_LIST[:]
         POINTS.clear()
 
     generatePoints()
@@ -165,5 +173,4 @@ while (i < scCount):
     POINTS.clear()
 
     i = i + 1
-
-
+    

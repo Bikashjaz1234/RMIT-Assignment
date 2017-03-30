@@ -1,2 +1,6 @@
-{"SC1" : 0, "sName" : "test1", "AP" : 25, "SP" : 25, "DP" : 25, "CP" : 25, "SK" : 10}
-{"SC2" : 1, "sName" : "test2", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10} 
+{"SC1" : 0, "sName" : "test1", "AP" : 25, "SP" : 25, "DP" : 25, "CP" : 25, "SK" : 10, "NE" : 1000, "RG" : "F"}
+{"SC2" : 1, "sName" : "test2", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10, "NE" : 100, "RG" : "T"} 
+{"SC3" : 2, "sName" : "test3", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10, "NE" : 10000, "RG" : "F"} 
+{"SC4" : 3, "sName" : "test4", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10, "NE" : 20000, "RG" : "T"} 
+{"SC5" : 4, "sName" : "test5", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10, "NE" : 5000, "RG" : "T"} 
+{"SC6" : 5, "sName" : "test6", "AP" : 30, "SP" : 30, "DP" : 20, "CP" : 20, "SK" : 10, "NE" : 30000, "RG" : "F"} 
