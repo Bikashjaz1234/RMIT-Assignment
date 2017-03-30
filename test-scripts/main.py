@@ -6,7 +6,7 @@ import sys
 import getopt
 
 #FILE_NAME = ""
-NUM_ENTRIES = 100
+NUM_ENTRIES = 0
 LON_START = 0000000
 LON_END = 9999999
 LAT_START = 0000000
@@ -19,6 +19,7 @@ OP_PERC = {'SEARCH' : 0, 'ADD' : 0, 'DEL' : 0, 'CHECK' : 0}
 K = 0
 CF_LIST = list()
 JSON_FILE = "test.json"
+GEN_RAND_LIST = "F"
 
 # Functions
 
@@ -41,6 +42,18 @@ def generatePoints():
         count = count + 1
         id = id + 1
 
+def writeDataFile(type):
+    dataList = list(POINTS)
+
+    if (type == "random"):
+        file = open(FILE_NAME + "-RANDOM-DATA.txt", "w")
+    elif (type == "data"):
+        file = open(FILE_NAME + "-DATA", "w")
+
+
+    for i in range(0, len(dataList)):
+        file.write(dataList[i] + "\n")
+    file.close()
 
 
 def writeToFile():
@@ -129,12 +142,21 @@ while (i < scCount):
     OP_PERC['SEARCH'] = CF_LIST[i]['SP']
     OP_PERC['DEL'] = CF_LIST[i]['DP']
     OP_PERC['CHECK'] = CF_LIST[i]['CP']
+    NUM_ENTRIES = CF_LIST[i]['NE']
+    GEN_RAND_LIST = CF_LIST[i]['RG']
 
 
-    FILE_NAME = CF_LIST[i]['sName']
+    FILE_NAME = CF_LIST[i]['sName'] + "-" + str(NUM_ENTRIES)
     K = CF_LIST[i]['SK']
+    print "RG: ", CF_LIST[i]['RG']
+    if (CF_LIST[i]['RG'] == "T"):
+        print ("random file requested")
+        generatePoints()
+        writeDataFile("random")
+        POINTS.clear()
 
     generatePoints()
+    writeDataFile("data")
     POINT_LIST = list(POINTS)
     appendOperations()
     writeToFile()
