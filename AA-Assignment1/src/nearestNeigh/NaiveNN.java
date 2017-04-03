@@ -2,13 +2,12 @@ package nearestNeigh;
 
 import java.util.ArrayList;
 import java.util.List;
-import nearestNeigh.Point;
 
 /**
  * This class is required to be implemented.  Naive approach implementation.
  *
- * @author Jeffrey, Youhan for Startup-Code
- * @author Harold Zang for implemented
+ * @author Jeffrey, Youhan for start-up code
+ * @author Harold Zang for implement
  */
 public class NaiveNN implements NearestNeigh{
     private double largestDistance;
@@ -17,48 +16,46 @@ public class NaiveNN implements NearestNeigh{
 
     @Override
     public void buildIndex(List<Point> points) {
-        // Do not use any structure, just list it.
+        // Because it does not have any structure, just list.
         naiveList = (ArrayList<Point>)points;
     }
 
     @Override
     public List<Point> search(Point searchTerm, int k) {
-        // To be implemented.
         double currentDistance;
-        // New List for store the search Result
+       // New List for store the search Result
         searchingResult = new ArrayList<Point>();
         largestDistance = 0.00;
-        // Use a new way to write the for loop
         // for(declaration : expression)
-        for (Point temp_point : naiveList) {
+        for (Point tempPoint : naiveList) {
         	// If the Category same, continue.
-          if(!temp_point.cat.equals(searchTerm.cat)){
+          if(!tempPoint.cat.equals(searchTerm.cat)){
             continue;
           }
           //Computes the distance between two Points
-          currentDistance = temp_point.distTo(searchTerm);
+          currentDistance = tempPoint.distTo(searchTerm);
           if(k > 0){
-        	//add to search result
-            searchingResult.add(temp_point);
+          	//add to search result
+            searchingResult.add(tempPoint);
             if(currentDistance > largestDistance){
               largestDistance = currentDistance;
-              largestDistancePoint = temp_point;
+              largestDistancePoint = tempPoint;
             }
             k--;
           }else{
             if(currentDistance < largestDistance){
                searchingResult.remove(largestDistancePoint);
-               largestDistancePoint = temp_point;
-               largestDistance = currentDistance;
-               //find out another largestDistance
-               for (Point temp_result_point : searchingResult) {
-                 double temp_currentDistance = temp_result_point.distTo(searchTerm);
-                 if(temp_currentDistance > largestDistance){
-                    largestDistance = temp_currentDistance;
-                    largestDistancePoint = temp_result_point;
+               largestDistancePoint = tempPoint;
+              largestDistance = currentDistance;
+               //findout another largestDistance
+               for (Point tempResultPoint : searchingResult) {
+                 double tempCurrentDistance = tempResultPoint.distTo(searchTerm);
+                 if(tempCurrentDistance > largestDistance){
+                    largestDistance = tempCurrentDistance;
+                    largestDistancePoint = tempResultPoint;
                  }
                }
-               searchingResult.add(temp_point);
+               searchingResult.add(tempPoint);
             }
           }
         }
@@ -67,8 +64,7 @@ public class NaiveNN implements NearestNeigh{
 
     @Override
     public boolean addPoint(Point point) {
-      // To be implemented.
-      // Check the current point is exist or not
+        // Check the current point is exist or not
       if(!this.isPointIn(point)){
     	  // If not exist, add it.
         naiveList.add(point);
@@ -79,12 +75,11 @@ public class NaiveNN implements NearestNeigh{
 
     @Override
     public boolean deletePoint(Point point) {
-        // To be implemented.
     	// For loop to find the point that we want to delete
-        for (Point temp_point : naiveList) {
-          if(temp_point.equals(point)){
+        for (Point tempPoint : naiveList) {
+          if(tempPoint.equals(point)){
         	  // Delete it
-             return naiveList.remove(temp_point);
+             return naiveList.remove(tempPoint);
           }
         }
         return false;
@@ -92,10 +87,9 @@ public class NaiveNN implements NearestNeigh{
 
     @Override
     public boolean isPointIn(Point point) {
-        // To be implemented.
     	// For loop to find the point that we want
-        for (Point temp_point : naiveList) {
-          if(temp_point.equals(point)){
+        for (Point tempPoint : naiveList) {
+          if(tempPoint.equals(point)){
              return true;
           }
         }
