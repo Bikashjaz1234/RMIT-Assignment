@@ -252,7 +252,7 @@ public class KDTreeNN implements NearestNeigh {
 	
 	/*
 	 * 用递归构造整个树。 分别创建针对x轴和y轴数值排序的comparator，每次分别对对应的sublist分别进行排序 然后分别取中值来作为对应subtree的跟节点
-	 * 问一下：若两个相比较的坐标值相等 则取数组中下标较大的一个作为subtree的根节点，来保证相同数值的数会出现在左边subtree
+	 * 遗留问题：若两个相比较的坐标值相等 则取数组中下标较大的一个作为subtree的根节点，来保证相同数值的数会出现在左边subtree
 	 * */
 	private KDTreeNode constructKDTree(ArrayList<Point> points, int depth) {
 		int length = points.size();
