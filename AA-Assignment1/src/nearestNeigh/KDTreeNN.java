@@ -25,7 +25,6 @@ public class KDTreeNN implements NearestNeigh {
 	public List<Point> search(Point searchTerm, int k) {
 		ArrayList<Point> results = new ArrayList<Point>();
 		KDTreeNode node;
-		Point biggestDistancePointInResult = null;
 		ReturnResult returnResult = new ReturnResult();
 		returnResult.k = k;
 		returnResult.distanceStandard = 0.00;
@@ -68,7 +67,7 @@ public class KDTreeNN implements NearestNeigh {
 					}
 				}
 			} else {
-				if (point.lon > currentPoint.lat) {
+				if (point.lon > currentPoint.lon) {
 					nextNode = currentNode.getRightChild();
 					if (nextNode == null) {
 						// set next axis of node to be 'y' because current is
@@ -101,7 +100,6 @@ public class KDTreeNN implements NearestNeigh {
 		Comparator<Point> comparator;
 		while (true) {
 			deletePoint = deleteNode.getPoint();
-
 			if (deletePoint.equals(point)) {
 				break;
 			}
@@ -217,6 +215,7 @@ public class KDTreeNN implements NearestNeigh {
 
 	@Override
 	public boolean isPointIn(Point point) {
+		System.out.println("0-----" + point.id);
 		// To be implemented.
 		KDTreeNode currentNode, nextNode;
 		Point currentPoint;
@@ -224,6 +223,7 @@ public class KDTreeNN implements NearestNeigh {
 
 		while (true) {
 			currentPoint = currentNode.getPoint();
+			System.out.println("------>" + currentPoint.id);
 			if (currentPoint.equals(point)) {
 				return true;
 			}
@@ -236,7 +236,7 @@ public class KDTreeNN implements NearestNeigh {
 					nextNode = currentNode.getLeftChild();
 				}
 			} else {
-				if (point.lon > currentPoint.lat) {
+				if (point.lon > currentPoint.lon) {
 					nextNode = currentNode.getRightChild();
 				} else {
 					nextNode = currentNode.getLeftChild();
@@ -249,7 +249,11 @@ public class KDTreeNN implements NearestNeigh {
 		}
 		return false;
 	}
-
+	
+	/*
+	 * 用递归构造整个树。 分别创建针对x轴和y轴数值排序的comparator，每次分别对对应的sublist分别进行排序 然后分别取中值来作为对应subtree的跟节点
+	 * 问一下：若两个相比较的坐标值相等 则取数组中下标较大的一个作为subtree的根节点，来保证相同数值的数会出现在左边subtree
+	 * */
 	private KDTreeNode constructKDTree(ArrayList<Point> points, int depth) {
 		int length = points.size();
 		Point point, tempPoint;
@@ -358,7 +362,10 @@ public class KDTreeNN implements NearestNeigh {
 		}
 		points.add(rootNode.getPoint());
 	}
-
+	
+	/*
+	 * 递归方法来对最短距离进行搜索
+	 * */
 	private ReturnResult searchClosestDistanceRec(KDTreeNode node, Point point, ArrayList<Point> results,
 			ReturnResult returnResult) {
 		KDTreeNode nextNode;
@@ -370,6 +377,13 @@ public class KDTreeNN implements NearestNeigh {
 		boolean isNextNodeRightNode = false, isClosePoint = false;
 		currentPoint = node.getPoint();
 		axis = node.getAxis();
+		// 找出为什么本应是最短距离节点之一的节点 id29 没有出现在结果集中
+		// 因为 id63 不是最短的节点之一， 导致我们不会去搜寻另一侧的subtree
+		if(node.getPoint().id.equals("id63")){
+			System.out.println("-=-=-=-=-=");
+		}
+		
+		// 险判断当前节点是否为叶子节点, 如果搜寻本应去左边的subtree， 但左边的subtree为空的话，则选择右边的subtree进行搜索 直到获得Leaf node
 		// find out leaf node
 		if (axis == 'x') {
 			if (currentPoint.lat < point.lat) {
@@ -399,6 +413,7 @@ public class KDTreeNN implements NearestNeigh {
 				nextNode = node.getLeftChild();
 				if (nextNode == null) {
 					nextNode = node.getRightChild();
+					isNextNodeRightNode = true;
 				} else {
 					isNextNodeRightNode = false;
 				}
@@ -413,48 +428,55 @@ public class KDTreeNN implements NearestNeigh {
 			currentDistance = currentPoint.distTo(point);
 
 			// To check whether results list has more space
+			// 如果结果集仍然有可用的空间， 则插入当前距离的节点 并且检查是否当前point的距离是结果集中的最大距离
 			if (k > 0) {
 				results.add(currentPoint);
 				k--;
 				// set biggest distance in the result
 				if (currentDistance > distanceStandard) {
 					biggestDistancePointInResult = currentPoint;
-					results.add(biggestDistancePointInResult);
 					returnResult.k = k;
 					returnResult.distanceStandard = currentDistance;
-					biggestDistancePointInResult = currentPoint;
+					returnResult.biggestDistancePointInResult = currentPoint;
 					return returnResult;
 				} else {
-					results.add(currentPoint);
 					returnResult.k = k;
 					return returnResult;
 				}
 			} else {
+				// 如果结果集已满 则删除其中的最大距离节点 插入新节点如果新节点的距离更近
 				if(currentDistance < distanceStandard){
 					results.remove(biggestDistancePointInResult);
 					results.add(currentPoint);
 					returnResult = searchBiggestDistancePoint(results, point, returnResult);
+					return returnResult;
 				}
-				return returnResult;
 			}
 		}else{
 			// current node is not a leaf node
+			// 当前节点不是一个叶子节点 则继续递归下一个节点
 			returnResult = searchClosestDistanceRec(nextNode, point, results, returnResult);
 			distanceStandard = returnResult.distanceStandard;
 			k = returnResult.k;
+			biggestDistancePointInResult = returnResult.biggestDistancePointInResult;
+			// id63 can't enter the mapping results cause we lose to compare distance or id29
 			currentDistance = currentPoint.distTo(point);
+			
+			// 判断是否将当前节点加入到结果集当中
 			if(k > 0){
 				if((currentDistance > distanceStandard) && currentPoint.cat.equals(point.cat)){
-					biggestDistancePointInResult = currentPoint;
 					returnResult.biggestDistancePointInResult = currentPoint;
-					distanceStandard = currentDistance;
-					results.add(biggestDistancePointInResult);
+					returnResult.distanceStandard = currentDistance;
+					results.add(returnResult.biggestDistancePointInResult);
+					isClosePoint = true;
+					k--;
+					returnResult.k = k;
 				}else if(currentPoint.cat.equals(point.cat)){
 					results.add(currentPoint);
+					isClosePoint = true;
+					k--;
+					returnResult.k = k;
 				}
-				isClosePoint = true;
-				k--;
-				returnResult.k = k;
 			}else{
 				if((currentDistance < distanceStandard) && currentPoint.cat.equals(point.cat)){
 					results.remove(biggestDistancePointInResult);
@@ -465,6 +487,7 @@ public class KDTreeNN implements NearestNeigh {
 			}
 			
 			// if current point is one of closest we will check another sub-branch
+			// 如果当前节点是最近的节点之一， 则对当前节点的另一个subtree进行搜索和查询
 			if(isClosePoint){
 				// we've already checked right sub branch
 				if(isNextNodeRightNode){
@@ -481,7 +504,7 @@ public class KDTreeNN implements NearestNeigh {
 	
 	private ReturnResult searchBiggestDistancePoint(ArrayList<Point> points, Point point, ReturnResult returnResult){
 		double currentDistance, biggestDistance = 0.00;
-		Point resultPoint = returnResult.biggestDistancePointInResult;
+		Point resultPoint = null;
 		for(Point tempPoint : points){
 			currentDistance = tempPoint.distTo(point);
 			if(currentDistance > biggestDistance){
@@ -489,9 +512,8 @@ public class KDTreeNN implements NearestNeigh {
 				resultPoint = tempPoint;
 			}
 		}
-		if(!returnResult.biggestDistancePointInResult.equals(resultPoint))
-			returnResult.biggestDistancePointInResult = resultPoint;
-			returnResult.distanceStandard = biggestDistance;
+		returnResult.biggestDistancePointInResult = resultPoint;
+		returnResult.distanceStandard = biggestDistance;
 		return returnResult;
 	}
 	
