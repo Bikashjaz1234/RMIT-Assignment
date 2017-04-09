@@ -13,16 +13,19 @@ import java.util.Map.Entry;
  *
  * @author Jeffrey, Youhan for start-up code
  * @author Harold Zang for implement
- */
+ *
+ **/
 public class KDTreeNN implements NearestNeigh {
 
 	private KDTreeNode rootNode;
 	private char[] axises = { 'x', 'y' };
-	private HashMap<Category, KDTreeNode> trees = new HashMap<Category, KDTreeNode>(); //Build trees based on the category, different category has in different tree.
+	// Different category save in different tree
+	private HashMap<Category, KDTreeNode> trees = new HashMap<Category, KDTreeNode>(); 
 	
 	@Override
 	public void buildIndex(List<Point> points) {
 		HashMap<Category, ArrayList<Point>> lists = this.createKDTreeBaseOnCategory((ArrayList<Point>)points);
+		// Check the whole maps, and then build the tree and save the date in the tree.
 		Iterator<Entry<Category, ArrayList<Point>>> iterator = lists.entrySet().iterator();
 		while(iterator.hasNext()){
 			rootNode = this.constructKDTree(iterator.next().getValue(), 0);
@@ -36,7 +39,7 @@ public class KDTreeNN implements NearestNeigh {
 		ArrayList<Point> results = new ArrayList<Point>();
 		KDTreeNode node;
 		ReturnResult returnResult = new ReturnResult();
-		// setup returnResult's value
+		// Setup the returnResult's value, it save the value of searching.
 		returnResult.k = k;
 		returnResult.distanceStandard = 0.00;
 		returnResult.biggestDistancePointInResult = null;
@@ -57,7 +60,7 @@ public class KDTreeNN implements NearestNeigh {
 
 		while (true) {
 			currentPoint = currentNode.getPoint();
-			// if the point alread exist, return false
+			// if the point is exist, stop insert, and return false.
 			if (currentPoint.equals(point)) {
 				return false;
 			}
@@ -72,6 +75,7 @@ public class KDTreeNN implements NearestNeigh {
 					}
 				} else {
 					// if two values are equal, choose as same as current value
+					// is smaller than targe value
 					nextNode = currentNode.getLeftChild();
 					if (nextNode == null) {
 						nextNode = new KDTreeNode(point, 'y');
@@ -80,11 +84,11 @@ public class KDTreeNN implements NearestNeigh {
 					}
 				}
 			} else {
-				// if axis is 'y', set-up the node based on 'y' value
 				if (point.lon > currentPoint.lon) {
 					nextNode = currentNode.getRightChild();
 					if (nextNode == null) {
-						// set next axis of node to be 'y' because current is 'x'
+						// set next axis of node to be 'y' because current is
+						// 'x'
 						nextNode = new KDTreeNode(point, 'x');
 						currentNode.setRightChild(nextNode);
 						return true;
@@ -116,7 +120,6 @@ public class KDTreeNN implements NearestNeigh {
 
 		ArrayList<Point> al1 = new ArrayList<Point>();
 		this.iterateTreeToListRec(temp, al1);
-	
 		
 		while (true) {
 			deletePoint = deleteNode.getPoint();
@@ -127,7 +130,8 @@ public class KDTreeNN implements NearestNeigh {
 				if (point.lat > deletePoint.lat) {
 					deleteNode = deleteNode.getRightChild();
 				} else {
-					// if two values are equal, choose as same as current value is smaller than targe value
+					// if two values are equal, choose as same as current value
+					// is smaller than target value
 					deleteNode = deleteNode.getLeftChild();
 				}
 			} else {
@@ -141,6 +145,7 @@ public class KDTreeNN implements NearestNeigh {
 				return false;
 			}
 
+			// The tempNode is make sure that the currentNode is the father node of the deleteNode 
 			if (!tempNode.getPoint().equals(currentNode.getPoint())) {
 				currentNode = tempNode;
 			}
@@ -169,6 +174,7 @@ public class KDTreeNN implements NearestNeigh {
 		iterateTreeToListRec(deleteNode, subTreeList);
 
 		// sort subTreeList
+		// Create a new comparator to order the list
 		if (deleteNode.getAxis() == 'x') {
 			comparator = new Comparator<Point>() {
 
@@ -213,7 +219,7 @@ public class KDTreeNN implements NearestNeigh {
 			} else {
 				depth = 1;
 			}
-
+			// Recreate the subtree.
 			newSubTreeRootNode = this.constructKDTree(subTreeList, depth);
 			if (currentNode.getAxis() == 'x') {
 				if (currentNode.getPoint().lat < newSubTreeRootNode.getPoint().lat) {
@@ -252,7 +258,7 @@ public class KDTreeNN implements NearestNeigh {
 					nextNode = currentNode.getRightChild();
 				} else {
 					// if two values are equal, choose as same as current value
-					// is smaller than targe value
+					// is smaller than target value
 					nextNode = currentNode.getLeftChild();
 				}
 			} else {
@@ -271,6 +277,19 @@ public class KDTreeNN implements NearestNeigh {
 	}
 	
 	
+	/**
+	 * 
+	 * Using Recursive to create the KD-Tree. Firstly, find out should use 'X' or 'Y', then, order and Comparator. 
+	 * Then set the middle point to root node. After that, we will have 1 root node and 2 sub-lists.
+	 * Then do the same thing to the 2 sub-lists, and finally, finish creating the KD-Tree.
+	 * 
+	 * @param points
+	 * 		all Nodes of tree
+	 * @param depth
+	 * 		Current point's depth
+	 * @return KDTreeNode
+	 * 	
+	 **/
 	private KDTreeNode constructKDTree(ArrayList<Point> points, int depth) {
 		int length = points.size();
 		Point point, tempPoint;
@@ -278,13 +297,17 @@ public class KDTreeNN implements NearestNeigh {
 		ArrayList<Point> leftList, rightList;
 		char axis = axises[depth % 2];
 
+		// Consider that if the points only has 1 point situation.
 		if (length == 1) {
 			leafNode = new KDTreeNode(points.get(0), axis);
 			return leafNode;
 		}
 
+		// Consider that the points has 2 points situation
 		if (length == 2) {
+			// If the tree based on 'X' axis.
 			if (axis == 'x') {
+				// Compare the latitude, set the bigger one to node, and another one to leaf Node, and put it to left child.
 				if (points.get(0).lat < points.get(1).lat) {
 					node = new KDTreeNode(points.get(1), axis);
 					leafNode = new KDTreeNode(points.get(0), axis);
@@ -295,6 +318,8 @@ public class KDTreeNN implements NearestNeigh {
 					node.setLeftChild(leafNode);
 				}
 			} else {
+				// If the tree based on 'Y' axis, compare the longitude
+				// Set the set the bigger one to node, and another one to leaf Node, and put it to left child
 				if (points.get(0).lon < points.get(1).lon) {
 					node = new KDTreeNode(points.get(1), axis);
 					leafNode = new KDTreeNode(points.get(0), axis);
@@ -308,6 +333,7 @@ public class KDTreeNN implements NearestNeigh {
 			return node;
 		}
 
+		// Using Comparator to sort list.
 		Comparator<Point> comparator;
 		// sort arrayList based on x axis
 		if (axis == 'x') {
@@ -344,7 +370,8 @@ public class KDTreeNN implements NearestNeigh {
 		point = points.get(median);
 		// check whether next point has the same point axis value
 		tempPoint = points.get(median + 1);
-		// if two nodes have same value, one point will be in left child node
+
+		// if the two nodes have same value, put one in the left.
 		if (axis == 'x') {
 			if (point.lat == tempPoint.lat) {
 				point = tempPoint;
@@ -367,32 +394,64 @@ public class KDTreeNN implements NearestNeigh {
 		return node;
 	}
 
-
+	/**
+	 * Iterate all kdtree node and save them into a list
+	 * 
+	 * @param rootNode
+	 * 		root node of the tree or sub-tree
+	 * @param points
+	 * 		An ArrayList that will be used to store all points from current tree or sub-tree
+	 **/
+	// Iterate all kdtree node and save them into a list
 	private void iterateTreeToListRec(KDTreeNode rootNode, ArrayList<Point> points) {
+		// Iterate left child
 		if (rootNode.getLeftChild() != null) {
 			iterateTreeToListRec(rootNode.getLeftChild(), points);
 		}
+		// Iterate right child
 		if (rootNode.getRightChild() != null) {
 			iterateTreeToListRec(rootNode.getRightChild(), points);
 		}
 		points.add(rootNode.getPoint());
 	}
 	
-
+	/**
+	 * 
+	 * Using Recursive to search Nearest point
+	 * First, using Recursive go to the leaf node, and add the leaf node to the Nearest point.
+	 * Then, go back to this point's root node, and check the root node.
+	 * If this root node pass the check, this means that we need to check this root node's root node.
+	 * If the tree's root node also pass the check, we need to check the another subtree.
+	 * 
+	 * @param node
+	 * 		Current Node
+	 * @param point
+	 * 		Middle point
+	 * @param results
+	 * 		Result List
+	 * @param returnResult
+	 * 		Save K's value, Nearest value, Nearest point
+	 * @return ReturnResult
+	 * 		
+	 * */
 	private ReturnResult searchClosestDistanceRec(KDTreeNode node, Point point, ArrayList<Point> results,
 			ReturnResult returnResult) {
 		KDTreeNode nextNode;
 		Point currentPoint;
 		char axis;
+		// Create variables for Nearest distance and biggest distance.
+		// These variables test the current result can add the result or not.
 		double currentDistance, distanceStandard = returnResult.distanceStandard;
 		Point biggestDistancePointInResult = returnResult.biggestDistancePointInResult;
 		int k = returnResult.k;
 		boolean isNextNodeRightNode = false;
 		currentPoint = node.getPoint();
 		axis = node.getAxis();
-		
+
 		// find out leaf node
 		if (axis == 'x') {
+			// If the point's latitude bigger than current point's latitude, we go to right side.
+			// Else we go to the left side.
 			if (currentPoint.lat < point.lat) {
 				nextNode = node.getRightChild();
 				isNextNodeRightNode = true;
@@ -401,6 +460,8 @@ public class KDTreeNN implements NearestNeigh {
 				isNextNodeRightNode = false;
 			}
 		} else {
+			// If the point's longitude bigger than current point's latitude, we go to right side.
+			// Else we go to the left side.
 			if (currentPoint.lon < point.lon) {
 				nextNode = node.getRightChild();
 				isNextNodeRightNode = true;
@@ -411,6 +472,7 @@ public class KDTreeNN implements NearestNeigh {
 		}
 
 		// check whether nextNode is a leaf node
+		// if do not have next node, stop running, and use current node.
 		if (nextNode == null) {
 			if(point.cat != currentPoint.cat){
 				return returnResult;
@@ -418,10 +480,11 @@ public class KDTreeNN implements NearestNeigh {
 			currentDistance = currentPoint.distTo(point);
 
 			// To check whether results list has more space
+			// if do not find all Ks, add current to result, and k-1
 			if (k > 0) {
 				results.add(currentPoint);
 				k--;
-				// set biggest distance in the result
+				// set farthest distance in the result
 				if (currentDistance >= distanceStandard) {
 					biggestDistancePointInResult = currentPoint;
 					returnResult.k = k;
@@ -433,7 +496,7 @@ public class KDTreeNN implements NearestNeigh {
 					return returnResult;
 				}
 			} else {
-				
+				// if the K is 0, we remove the biggest result, and add new one in the list.
 				if(currentDistance < distanceStandard){
 					results.remove(biggestDistancePointInResult);
 					results.add(currentPoint);
@@ -442,13 +505,14 @@ public class KDTreeNN implements NearestNeigh {
 				}
 			}
 		}else{
-			// current node is not a leaf node
+			// current node is not a leaf node, go to the next node, and try to find the left node.
 			returnResult = searchClosestDistanceRec(nextNode, point, results, returnResult);
 			distanceStandard = returnResult.distanceStandard;
 			k = returnResult.k;
 			biggestDistancePointInResult = returnResult.biggestDistancePointInResult;
 			currentDistance = currentPoint.distTo(point);
 			
+			// Find out do we need to add current node to the list.
 			if(k > 0){
 				if((currentDistance >= distanceStandard) && currentPoint.cat == point.cat){
 					returnResult.biggestDistancePointInResult = currentPoint;
@@ -472,8 +536,9 @@ public class KDTreeNN implements NearestNeigh {
 				}
 			}
 			
+			// Find out do we need to search other subtree
 			if(this.isNeedToCheckOtherSubTree(node, point, distanceStandard)){
-				// we've already checked right sub branch
+				// we already checked right sub branch
 				if(isNextNodeRightNode){
 					if(node.getLeftChild() != null)
 						returnResult = this.searchClosestDistanceRec(node.getLeftChild(), point, results, returnResult);
@@ -486,7 +551,20 @@ public class KDTreeNN implements NearestNeigh {
 		return returnResult;
 	}
 	
-	
+	/**
+	 * 
+	 * Find out the farthest point and Distance
+	 * 
+	 * @param points
+	 * 		Result list
+	 * @param point
+	 * 		middle point
+	 * @param returnResult
+	 * 		Save K's value, Nearest value, Nearest point
+	 * @return ReturnResult
+	 * 		Save K's value, Nearest value, Nearest point
+	 * 
+	 * */
 	private ReturnResult searchBiggestDistancePoint(ArrayList<Point> points, Point point, ReturnResult returnResult){
 		double currentDistance, biggestDistance = 0.00;
 		Point resultPoint = null;
@@ -502,7 +580,20 @@ public class KDTreeNN implements NearestNeigh {
 		return returnResult;
 	}
 	
-	
+	/**
+	 * 
+	 * Find out do we need to search another sub-tree
+	 * 
+	 * @param node
+	 * 		Current node
+	 * @param point
+	 * 		Middle point
+	 * @param distanceStandard
+	 * 		Current standard Distance
+	 * @return boolean
+	 * 		true We need to search another sub-tree
+	 * 		false We do not need to search another sub-tree
+	 * */
 	private boolean isNeedToCheckOtherSubTree(KDTreeNode node, Point point, double distanceStandard){
 		Point currentPoint = node.getPoint();
 		char axis = node.getAxis();
@@ -526,7 +617,19 @@ public class KDTreeNN implements NearestNeigh {
 		return false;
 	}
 	
-
+	/**
+	 * 
+	 * If the points have the same category, we put them together.
+	 * 
+	 * @param points
+	 * 		Points list
+	 * 
+	 * @return HashMap<Category, ArrayList<Point>>
+	 * 		The Map, category is the key, and point list is the value
+	 * 
+	 * */
+	
+	//based on different category, we put same category to same list.
 	private HashMap<Category, ArrayList<Point>> createKDTreeBaseOnCategory(ArrayList<Point> points){
 		HashMap<Category, ArrayList<Point>> lists = new HashMap<Category, ArrayList<Point>>();
 		for(Point point: points){
@@ -541,7 +644,8 @@ public class KDTreeNN implements NearestNeigh {
 		return lists;
 	}
 	
-
+	
+	// For save and transmit the date between different methods
 	class ReturnResult{
 		int k;
 		double distanceStandard;

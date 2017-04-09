@@ -1,5 +1,10 @@
 package nearestNeigh;
 
+/**
+ * This class is required to be implemented.  Naive approach implementation.
+ *
+ * @author Harold Zang
+ */
 // Create a class for sotre point and axis.
 public class KDTreeNode {
 	private Point point;

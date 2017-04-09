@@ -28,7 +28,7 @@ public class NaiveNN implements NearestNeigh{
         largestDistance = 0.00;
         // for(declaration : expression)
         for (Point tempPoint : naiveList) {
-        	// If the Category same, continue.
+        	// Find the same category
           if(!tempPoint.cat.equals(searchTerm.cat)){
             continue;
           }
@@ -47,7 +47,7 @@ public class NaiveNN implements NearestNeigh{
                searchingResult.remove(largestDistancePoint);
                largestDistancePoint = tempPoint;
               largestDistance = currentDistance;
-               //findout another largestDistance
+               //find out another largestDistance
                for (Point tempResultPoint : searchingResult) {
                  double tempCurrentDistance = tempResultPoint.distTo(searchTerm);
                  if(tempCurrentDistance > largestDistance){
