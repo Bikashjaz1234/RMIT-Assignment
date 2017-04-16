@@ -9,5 +9,9 @@ UnixSyste-A2                35/35</br>
 Web Programming-A2          14/15</br>
 Web Programming-A3          31.5/30</br>
 Network Programming-Lab1    Full-Mark</br>
+Network Programming-Lab2    9/10</br>
+Network Programming-Lab3    9/10</br>
 
 Harold Zang
+
+
