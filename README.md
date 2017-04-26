@@ -1,7 +1,7 @@
 # RMIT-Assignment
 APT-Assignment1             94/100</br>
 APT-Assignment2             98/100+14/20bonus</br>
-Algorithms and Analysis     14/15</br>
+AA-Assignment1              14/15</br>
 CloudComputing-A1           15/15</br>
 Programming Techniques-A1   19.5/20</br>
 Programming Techniques-A2   29.5/30</br>
