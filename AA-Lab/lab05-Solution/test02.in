@@ -1,0 +1,18 @@
+insert 29
+insert 10
+insert 50
+insert 35
+insert 20
+insert 5
+insert 2
+insert 80
+insert 30
+insert 70
+print_ascii
+inorder
+preorder
+postorder
+min
+max
+height
+quit

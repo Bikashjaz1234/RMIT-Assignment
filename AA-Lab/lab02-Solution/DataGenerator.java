@@ -41,8 +41,7 @@ public class DataGenerator
 	 * Generate one sample, using sampling with replacement.
 	 */
 	public int sampleWithReplacement() {
-		// Implement me!
-		return 0;
+		return mRandGen.nextInt(mEndOfRange - mStartOfRange + 1) + mStartOfRange;
 	} // end of sampleWithReplacement()
 	
 	

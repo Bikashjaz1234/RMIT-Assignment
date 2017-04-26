@@ -1,0 +1,15 @@
+insert 10
+insert 5
+insert 1
+insert 3
+insert 15
+insert 12
+insert 19
+print_ascii
+inorder
+preorder
+postorder
+min
+max
+height
+quit
