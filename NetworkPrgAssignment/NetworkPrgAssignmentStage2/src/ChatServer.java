@@ -3,20 +3,24 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ChatServer {
-
-	public static final int LISTENING_PORT = 6666;
+	// Set the Chat port
+	public static final int LISTENING_PORT = 7777;
 
 	public static void main(String[] args) throws IOException {
-
+		// Create a socket for Communication.
 		ServerSocket serverSocket = new ServerSocket(LISTENING_PORT);
-		System.out.println("Iniciando o servidor na porta " + serverSocket.getLocalPort());
-		ServerThread dispatcher = new ServerThread();
-		dispatcher.start();
+		// Show socket's information
+		System.out.println("Chat Server Start! Server's Port is: " + serverSocket.getLocalPort());
+		// Create a thread, and run it.
+		ChatServerThread chatThread = new ChatServerThread();
+		chatThread.start();
 
 		while (true) {
+			// Create socket for client
 			Socket clientSocket = serverSocket.accept();
-			ClientListener clientListener = new ClientListener(clientSocket, dispatcher);
-			dispatcher.addClient(clientSocket);
+			ChatClientListener clientListener = new ChatClientListener(clientSocket, chatThread);
+			// Add client to the server
+			chatThread.addClient(clientSocket);
 			clientListener.start();
 		}
 	}

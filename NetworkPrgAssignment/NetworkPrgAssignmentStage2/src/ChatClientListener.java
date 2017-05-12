@@ -5,44 +5,41 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 /*
- * Listener Thread for Game
- * It is similar with ChatClientListener
+ * Listener Thread for Chat
+ * It is similar with ClientListener
  */
-public class ClientListener extends Thread {
+public class ChatClientListener extends Thread {
 
 	// Create socket and variables
 	private Socket mSocket;
-	private ServerThread mGameThread;
+	private ChatServerThread mDispatcher;
 	private BufferedReader mSocketReader;
 	PrintStream os = null;
 	public static String name;
 
-	public ClientListener(Socket aSocket, ServerThread aServerGame) throws IOException {
+	public ChatClientListener(Socket aSocket, ChatServerThread aServerMsgDispatcher) throws IOException {
 		mSocket = aSocket;
 		mSocketReader = new BufferedReader(
 			new InputStreamReader(mSocket.getInputStream())
 		);
-		mGameThread = aServerGame;
+		mDispatcher = aServerMsgDispatcher;
 	}
 
 	public void run() {
 		try {
+			// Read the message
 			while (!isInterrupted()) {
-				// Read the message
 				String msg = mSocketReader.readLine();
-				// if message is null, break
 				if (msg == null) {
+					// if message is null, break
 					break;
 				}
-				mGameThread.playGame(mSocket, msg);
+				mDispatcher.dispatchMsg(mSocket, msg);
 			}
 		} catch (IOException ioex) {
-			System.err.println("Loss connection for a client");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Error Happened!");
 		}
-		mGameThread.deleteClient(mSocket);
+		mDispatcher.deleteClient(mSocket);
 	}
 }
 

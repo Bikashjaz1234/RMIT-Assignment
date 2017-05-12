@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-java ChatServer
+java GameServer & java ChatServer

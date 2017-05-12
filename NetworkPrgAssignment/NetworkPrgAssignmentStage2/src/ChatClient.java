@@ -8,58 +8,57 @@ import java.util.Scanner;
 
 
 public class ChatClient {
-	public static final String SERVER_HOSTNAME = "localhost";
-	public static final int SERVER_PORT = 6666;
+	// Which server that it connect
+	public static final String SERVER_HOSTNAME = "m1-c23n1.csit.rmit.edu.au";
+	// Which port that if connect
+	public static final int SERVER_PORT = 7777;
 
-	public static void main(String[] args) {
+	public static void chatRoom(String name) {
+		// Create reader and printer for send and print message
 		BufferedReader in = null;
 		PrintWriter out = null;
 		Socket socket = null;
-
+		
+		// Try to connect the server, and create buffer
 		try {
 			socket = new Socket(SERVER_HOSTNAME, SERVER_PORT);
-
 			in = new BufferedReader(
 				new InputStreamReader(socket.getInputStream())
 			);
-
 			out = new PrintWriter(
 				new OutputStreamWriter(socket.getOutputStream())
 			);
-
-			System.out.println("Connect to " + SERVER_HOSTNAME + ":" + SERVER_PORT);
+			// Show message if connect chat server.
+			System.out.println("Connect to Chat server " + SERVER_HOSTNAME + ":" + SERVER_PORT);
 
 		} catch (IOException ioe) {
-			System.err.println("Cannot connect to " + SERVER_HOSTNAME + ":" + SERVER_PORT);
+			// If cannot connect the chat server, show error message
+			System.out.println("Cannot connect to Chat server " + SERVER_HOSTNAME + ":" + SERVER_PORT);
+			System.out.println("Please use follow command to start Communication Server");
+			System.out.println("Command: java ChatServer");
 			System.exit(1);
 		}
-
-		String name;
-		System.out.print("Please input your name: ");
-		Scanner ins = new Scanner(System.in);
-		name = ins.nextLine();
-
-		Sender sender = new Sender(out, name);
-
+		// Create sender for send message
+		ChatSender sender = new ChatSender(out, name);
 		sender.start();
 
 		try {
-
 			String message;
-			
-			
 			while ((message = in.readLine()) != null) {
 
 				message = message.replaceAll("(\\r|\\n)", "");
-				if (message.length() == 0) {
+				// if user input something, show message
+				if (message.length() != 0) {
+					System.out.println(message);
+					System.out.print("> ");
+				// otherwise, continue;
+				}else{
 					continue;
 				}
 
-				System.out.println(message);
-				System.out.print("> ");
 			}
 		} catch (IOException ioe) {
-			System.err.println("Conexão com o servidor falhou.");
+			System.err.println("Error happened!");
 		}
 	}
 }

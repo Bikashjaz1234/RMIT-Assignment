@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-java ChatClient
+java GameClient

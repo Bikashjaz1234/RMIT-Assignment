@@ -1,0 +1,337 @@
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 0
+Server Message: The winners' name are aabb, bbcc; The sum is: 0!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are aabb, bbcc; The sum is: 2!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: ccdd
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are aabb, bbcc, ccdd; The sum is: 2!
+
+The player 1 information:
+Name: eeff
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: eeffee
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: aw2
+Generate Number: 0
+Guess Number: 1
+The Server Generate Number: 0
+Server Message: The winners' name are eeff, eeffee; The sum is: 0!
+
+The player 1 information:
+Name: abcd
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: asef
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: eeee
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 0
+Server Message: The winners' name are abcd, asef, eeee; The sum is: 0!
+
+The player 1 information:
+Name: abcd
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: ccdd
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are abcd, bbcc, ccdd; The sum is: 2!
+
+The player 1 information:
+Name: eeff
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: ppoo
+Generate Number: 0
+Guess Number: 9
+The player 3 information:
+Name: qwe
+Generate Number: 1
+Guess Number: 3
+The Server Generate Number: 0
+Server Message: The winner's name is eeff; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: eeffee33
+Generate Number: 0
+Guess Number: 1
+The player 3 information:
+Name: epppp
+Generate Number: 0
+Guess Number: 4
+The Server Generate Number: 1
+Server Message: The winner's name is eeffee33; The sum is: 1!
+
+The player 1 information:
+Name: eeff
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are eeff, bbc; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbee
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 0
+Server Message: The winners' name are aabb, bbee; The sum is: 0!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 3
+The player 3 information:
+Name: oopp
+Generate Number: 2
+Guess Number: 4
+The Server Generate Number: 2
+Server Message: The winner's name is oopp; The sum is: 4!
+
+The player 1 information:
+Name: ppll
+Generate Number: 0
+Guess Number: 4
+The player 2 information:
+Name: prpr
+Generate Number: 1
+Guess Number: 3
+The Server Generate Number: 0
+Server Message: The winner's name is prpr; The sum is: 1!
+
+The player 1 information:
+Name: abcd
+Generate Number: 0
+Guess Number: 2
+The player 2 information:
+Name: pp
+Generate Number: 2
+Guess Number: 3
+The Server Generate Number: 0
+Server Message: The winner's name is abcd; The sum is: 2!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: aadd
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are aabb, aadd; The sum is: 1!
+
+The player 1 information:
+Name: aaaa
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbbb
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are aaaa, bbbb; The sum is: 2!
+
+The player 1 information:
+Name: aaaa
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbbb
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are aaaa, bbbb; The sum is: 2!
+
+The player 1 information:
+Name: abcd
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are abcd, bbcc; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are aabb, bbcc; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are aabb, bbcc; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 2
+Server Message: The winners' name are aabb, bbcc; The sum is: 2!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbee
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are aabb, bbee; The sum is: 1!
+
+The player 1 information:
+Name: aabb
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: qqww
+Generate Number: 0
+Guess Number: 2
+The player 3 information:
+Name: ccddeerp
+Generate Number: 0
+Guess Number: 3
+The Server Generate Number: 0
+Server Message: The winner's name is aabb; The sum is: 0!
+
+The player 1 information:
+Name: null
+Generate Number: 0
+Guess Number: 1
+The player 2 information:
+Name: a
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winner's name is null; The sum is: 1!
+
+The player 1 information:
+Name: bbcc
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: ppoo
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: prpr
+Generate Number: 1
+Guess Number: 3
+The Server Generate Number: 1
+Server Message: The winner's name is prpr; The sum is: 2!
+
+The player 1 information:
+Name: asdf
+Generate Number: 0
+Guess Number: 1
+The player 2 information:
+Name: lloo
+Generate Number: 0
+Guess Number: 1
+The Server Generate Number: 1
+Server Message: The winners' name are asdf, lloo; The sum is: 1!
+
+The player 1 information:
+Name: aaaa
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: bbbb
+Generate Number: 0
+Guess Number: 0
+The player 3 information:
+Name: cccc
+Generate Number: 0
+Guess Number: 0
+The Server Generate Number: 1
+Server Message: The winners' name are aaaa, bbbb, cccc; The sum is: 1!
+
+The player 1 information:
+Name: eeee
+Generate Number: 0
+Guess Number: 0
+The player 2 information:
+Name: ffff
+Generate Number: 0
+Guess Number: 1
+The Server Generate Number: 1
+Server Message: The winner's name is ffff; The sum is: 1!
+
