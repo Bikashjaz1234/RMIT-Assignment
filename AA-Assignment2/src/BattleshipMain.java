@@ -39,7 +39,7 @@ public class BattleshipMain {
                 return new BonusPlayer();
             case "sample":
             	// A error
-                //return new SampleRandomGuessPlayer();
+                return new SampleRandomGuessPlayer();
             default:
                 return null;
         }
