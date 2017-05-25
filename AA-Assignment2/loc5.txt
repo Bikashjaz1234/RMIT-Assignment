@@ -1,0 +1,5 @@
+AircraftCarrier 9 4 E
+Battleship 4 0 S
+Submarine 8 9 S
+Cruiser 9 0 E
+Destroyer 7 0 S
