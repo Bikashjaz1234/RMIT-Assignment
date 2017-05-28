@@ -1,6 +1,11 @@
 package player;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Scanner;
+
+import ship.Ship;
 import world.World;
 
 /**
@@ -11,41 +16,422 @@ import world.World;
  */
 public class GreedyGuessPlayer  implements Player{
 
-    @Override
-    public void initialisePlayer(World world) {
-        // To be implemented.
-    } // end of initialisePlayer()
+    World world;
+    int maxGuesses = -1;
+    int DIRECTIONS = 4;
+    //ArrayList<Guess> guesses = new ArrayList<>();
+    ArrayList<World.ShipLocation> shipLoc = new ArrayList<>();
+    HashSet<Guess> guesses = new HashSet<>();
+    ArrayList<Guess> tmp = new ArrayList<>();
+    ArrayList<Guess> hits = new ArrayList<>();
+    ArrayList<Guess> target = new ArrayList<>();
+    ArrayList<TargetMode> targetList = new ArrayList<>();
+    ArrayList<Guess> nextGuess = new ArrayList<>();
+
 
     @Override
-    public Answer getAnswer(Guess guess) {
-        // To be implemented.
+    public void initialisePlayer(World world)
+    {
+        this.world = world;
+        maxGuesses = world.numRow * world.numColumn;
+        System.out.println("maxGuesses: " + maxGuesses);
+        // ship locations
+        for (int i = 0; i < world.shipLocations.size(); i++)
+        {
+            shipLoc.add(world.shipLocations.get(i));
+        }
 
-        // dummy return
-        return null;
+
+
+        for (int i = 0; i < shipLoc.size(); i++)
+        {
+
+        }
+
+        int startRow = 0;
+        int startCol = 0;
+
+        /*for (startRow = 0; startRow < world.numRow;)
+        {
+            for (startCol = 0; startCol < world.numColumn;)
+            {
+
+                Guess guess = new Guess();
+                guess.row = startRow;
+                guess.column = startCol;
+
+                guesses.add(guess);
+            }
+        }*/
+        // Generate guesses
+        even();
+        odd();
+
+        tmp.addAll(guesses);
+
+        /*for (int i = 0; i < tmp.size(); i++)
+        {
+            System.out.println(tmp.get(i).row + ":" + tmp.get(i).column);
+            System.out.println();
+        }
+
+        System.out.println("guesses size: " + guesses.size());*/
+
+
+
+
+    }// end of initialisePlayer()
+
+    public void even()
+    {
+
+        for (int r = 0; r < world.numRow; r+=2 )
+        {
+            for (int c = 0; c < world.numColumn; c+=2)
+            {
+                Guess guess = new Guess();
+                guess.row = r;
+                guess.column = c;
+
+                guesses.add(guess);
+            }
+        }
+
+
+    }
+    public void odd()
+    {
+
+        for (int r = 1; r < world.numRow; r+=2 )
+        {
+            for (int c = 1; c < world.numColumn; c+=2)
+            {
+                Guess guess = new Guess();
+                guess.row = r;
+                guess.column = c;
+
+                guesses.add(guess);
+            }
+        }
+    }
+
+    @Override
+    public Answer getAnswer(Guess guess)
+    {
+        System.out.println("Answer");
+        Answer answer = new Answer();
+        ArrayList<World.Coordinate> cdns;
+        World.Coordinate cdn;
+        Ship ship;
+        for (int i = 0; i < this.shipLoc.size(); i++) {
+            cdns = this.shipLoc.get(i).coordinates;
+            ship = this.shipLoc.get(i).ship;
+            for (int m = 0; m < cdns.size(); m++) {
+                cdn = cdns.get(m);
+                if (cdn.row == guess.row && cdn.column == guess.column) {
+                    answer.isHit = true;
+                    hits.add(guess);
+                    TargetMode recordTarget = new TargetMode(hits);
+                    targetList.add(recordTarget);
+                    cdns.remove(m);
+                    // check whether current ship is sunk
+                    if (cdns.isEmpty()) {
+                        answer.shipSunk = ship;
+                        this.shipLoc.remove(i);
+                        return answer;
+                    }
+                }
+            }
+        }// end for loop
+
+        return answer;
     } // end of getAnswer()
 
 
     @Override
-    public Guess makeGuess() {
-        // To be implemented.
+    public Guess makeGuess()
+    {
+        Guess guessLocal = new Guess();
+        // Hunting mode
+        if (hits.size() == 0)
+        {
+            System.out.println("Hunting Mode");
+            int index = generateRandomNum("guess");
 
-        // dummy return
-        return null;
+            guessLocal = tmp.get(index);
+
+            tmp.remove(index);
+
+            //System.out.println(guessLocal.toString());
+        }
+        // Targeted mode
+        else
+        {
+            System.out.println("Targeting Mode");
+
+            TargetMode targetMode = targetList.get(targetList.size() - 1);
+
+
+            // Choose random direction for next hit
+            if (targetMode.isFirstHit == true)
+            {
+                int direction = generateRandomNum("dir");
+
+                if (direction == 0)
+                {
+                    guessLocal = targetMode.goNorth();
+                    targetMode.setLastDirection("n");
+                    targetMode.setIsFirstHit(false);
+                }
+                else if (direction == 1)
+                {
+                    guessLocal = targetMode.goEast();
+                    targetMode.setLastDirection("e");
+                    targetMode.setIsFirstHit(false);
+                }
+                else if (direction == 2)
+                {
+                    guessLocal = targetMode.goSouth();
+                    targetMode.setLastDirection("s");
+                    targetMode.setIsFirstHit(false);
+                }
+                else if (direction == 3)
+                {
+                    guessLocal = targetMode.goWest();
+                    targetMode.setLastDirection("w");
+                    targetMode.setIsFirstHit(false);
+                }
+            }
+            else
+            {
+                if (targetMode.getLastDirection().equalsIgnoreCase("n"))
+                {
+                    guessLocal = targetMode.goNorth();
+                }
+                else if (targetMode.getLastDirection().equalsIgnoreCase("e"))
+                {
+                    guessLocal = targetMode.goEast();
+                }
+                else if(targetMode.getLastDirection().equalsIgnoreCase("s"))
+                {
+                    guessLocal = targetMode.goSouth();
+                }
+                else if (targetMode.getLastDirection().equalsIgnoreCase("w"))
+                {
+                    guessLocal = targetMode.goWest();
+                }
+                else
+                {
+                    Guess tmp = nextGuess.get(0);
+                    guessLocal = targetMode.processNextGuess(tmp, targetMode.getLastDirection());
+                }
+            }
+
+        }
+        return guessLocal;
     } // end of makeGuess()
 
 
+
     @Override
-    public void update(Guess guess, Answer answer) {
-        // To be implemented.
+    public void update(Guess guess, Answer answer)
+    {
+        TargetMode targetMode;
+        System.out.println("update: targetList " + targetList.size());
+        if (answer.isHit)
+        {
+            targetMode = targetList.get(targetList.size() - 1);
+            guess = targetMode.getLastGuess();
+            nextGuess.add(guess);
+
+        }
+        else
+        {
+            answer.isHit = false;
+            targetList.clear();
+
+        }
     } // end of update()
 
 
     @Override
-    public boolean noRemainingShips() {
+    public boolean noRemainingShips()
+    {
         // To be implemented.
 
         // dummy return
-        return true;
+        return this.shipLoc.isEmpty();
     } // end of noRemainingShips()
 
+    public int generateRandomNum(String type)
+    {
+        int result = -1;
+        Random random = new Random();
+
+        if (type.equalsIgnoreCase("row"))
+        {
+            result = random.nextInt(world.numRow);
+        }
+        else if (type.equalsIgnoreCase("col"))
+        {
+            result = random.nextInt(world.numColumn);
+        }
+        else if (type.equalsIgnoreCase("guess"))
+        {
+            result = random.nextInt(tmp.size());
+        }
+        else if (type.equalsIgnoreCase("dir"))
+        {
+            result = random.nextInt(DIRECTIONS);
+        }
+
+
+        return result;
+    }
+
+    class TargetMode
+    {
+        // North row + 1
+        int north = 1;
+        // East  col + 1
+        int east = 1;
+        // South  col - 1
+        int south = 1;
+        // West row -1
+        int west = 1;
+
+        String lastDirection;
+
+        ArrayList<Guess> tried = new ArrayList<>();
+        Guess nextGuess;
+        Guess firstHit;
+        Guess lastGuess;
+        boolean isFirstHit = true;
+
+
+        public TargetMode(ArrayList<Guess> hits)
+        {
+            tried.addAll(hits);
+            this.firstHit = tried.get(0);
+        }
+
+
+
+        public Guess goNorth()
+        {
+            nextGuess = tried.get(tried.size() - 1);
+            nextGuess.row = nextGuess.row + north;
+            tried.add(nextGuess);
+            this.lastDirection = "n";
+            lastGuess = nextGuess;
+            return nextGuess;
+        }
+
+        public Guess goEast()
+        {
+            nextGuess = tried.get(tried.size() - 1);
+            nextGuess.column = nextGuess.column + east;
+            this.lastDirection = "e";
+            tried.add(nextGuess);
+            lastGuess = nextGuess;
+            return nextGuess;
+        }
+
+        public Guess goSouth()
+        {
+            nextGuess = tried.get(tried.size() - 1);
+            nextGuess.row = nextGuess.row - south;
+            this.lastDirection = "s";
+            tried.add(nextGuess);
+            lastGuess = nextGuess;
+            return nextGuess;
+        }
+
+        public Guess goWest()
+        {
+            nextGuess = tried.get(tried.size() - 1);
+            nextGuess.column = nextGuess.column - west;
+            this.lastDirection = "w";
+            tried.add(nextGuess);
+            lastGuess = nextGuess;
+            return nextGuess;
+        }
+
+        public Guess processNextGuess(Guess guess, String lastDirection)
+        {
+            guess = firstHit;
+
+            if (lastDirection.equalsIgnoreCase("n"))
+            {
+                this.setLastDirection("s");
+            }
+            else if (lastDirection.equalsIgnoreCase("e"))
+            {
+                this.setLastDirection("w");
+            }
+            else if (lastDirection.equalsIgnoreCase("s"))
+            {
+                this.setLastDirection("n");
+            }
+            else if (lastDirection.equalsIgnoreCase("w"))
+            {
+                this.setLastDirection("e");
+            }
+
+
+            return guess;
+        }
+
+        public String getLastDirection()
+        {
+            return this.lastDirection;
+        }
+
+        public void setLastDirection(String direction)
+        {
+            this.lastDirection = direction;
+        }
+
+        public Guess getFirstHit()
+        {
+            return this.firstHit;
+        }
+
+        public Guess getRecentHit()
+        {
+            return tried.get(tried.size() - 1);
+        }
+
+        public void setIsFirstHit(boolean isFirstHit)
+        {
+            this.isFirstHit = isFirstHit;
+        }
+
+        public boolean getIsFirstHit()
+        {
+            return isFirstHit;
+        }
+
+        public ArrayList getTried()
+        {
+            return this.tried;
+        }
+
+        public Guess getNextGuess()
+        {
+            return nextGuess;
+        }
+
+        public Guess getLastGuess()
+        {
+            return lastGuess;
+        }
+
+        public void addTried(Guess guess)
+        {
+            tried.add(guess);
+        }
+    }
 } // end of class GreedyGuessPlayer
+
+
