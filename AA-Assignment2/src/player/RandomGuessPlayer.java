@@ -14,12 +14,12 @@ import world.World;
 public class RandomGuessPlayer implements Player{
 
     World world;
-    int row;
-    int col;
     int maxGuesses = -1;
     //ArrayList<Guess> guesses = new ArrayList<>();
     ArrayList<World.ShipLocation> shipLoc = new ArrayList<>();
     HashSet<Guess> guesses = new HashSet<>();
+    // Array list that has a copy of the guesses hashset
+    // Array list is easier to iterate through
     ArrayList<Guess> tmp = new ArrayList<>();
 
 
@@ -36,12 +36,7 @@ public class RandomGuessPlayer implements Player{
         }
 
 
-
-        for (int i = 0; i < shipLoc.size(); i++)
-        {
-
-        }
-
+        // Generate random guesses for the game board and copy them to the tmp array list
         int startRow = 0;
         int startCol = 0;
 
@@ -73,6 +68,7 @@ public class RandomGuessPlayer implements Player{
 
     } // end of initialisePlayer()
 
+    // Copied from part C not sure if it works properly here
     @Override
     public Answer getAnswer(Guess guess)
     {
@@ -105,16 +101,16 @@ public class RandomGuessPlayer implements Player{
     @Override
     public Guess makeGuess()
     {
-        int guessCount = 0;
         Guess guessLocal = new Guess();
-
+        // Guesses are pre generated so a random index of the array list is chosen
+        // and then removed
         int index = generateRandomNum("guess");
 
         guessLocal = tmp.get(index);
 
         tmp.remove(index);
 
-        System.out.println(guessLocal.toString());
+        //System.out.println(guessLocal.toString());
 
         return guessLocal;
     } // end of makeGuess()
@@ -136,6 +132,7 @@ public class RandomGuessPlayer implements Player{
         return true;
     } // end of noRemainingShips()
 
+    // Function to generate random numbers needed in the game
     public int generateRandomNum(String type)
     {
         int result = -1;
