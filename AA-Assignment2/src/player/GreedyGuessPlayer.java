@@ -31,6 +31,12 @@ public class GreedyGuessPlayer  implements Player{
     boolean triedSouth = false;
     boolean triedEast = false;
     boolean triedWest = false;
+    String currentDirection = "none";
+    int westCount = 0;
+    int northCount = 0;
+    int eastCount = 0;
+    int southCount = 0;
+    int westMove = 1;
 
     @Override
     public void initialisePlayer(World world)
@@ -43,12 +49,6 @@ public class GreedyGuessPlayer  implements Player{
             shipLoc.add(world.shipLocations.get(i));
         }
 
-
-
-        for (int i = 0; i < shipLoc.size(); i++)
-        {
-
-        }
 
 
         // Generate guesses
@@ -133,6 +133,8 @@ public class GreedyGuessPlayer  implements Player{
     public Guess makeGuess()
     {
         Guess guessLocal = new Guess();
+
+
         // Targeting mode
         if (inTargetMode)
         {
@@ -141,6 +143,7 @@ public class GreedyGuessPlayer  implements Player{
 
             if (goToFirstGuess)
             {
+                System.out.println("gotofirstguess");
                 targetGuess = firstHit;
                 hits.clear();
                 hits.add(targetGuess);
@@ -148,42 +151,52 @@ public class GreedyGuessPlayer  implements Player{
 
             if (!triedNorth)
             {
+                currentDirection = "n";
                 targetGuess = hits.get(hits.size() - 1);
                 targetGuess.row = targetGuess.row + 1;
-                triedNorth = true;
+                northCount++;
+                removeCDN(targetGuess);
+
+                //triedNorth = true;
             }
             else if (!triedSouth)
             {
+                currentDirection = "s";
                 targetGuess = hits.get(hits.size() - 1);
                 targetGuess.row = targetGuess.row - 1;
-                triedSouth = true;
+                removeCDN(targetGuess);
+                //triedSouth = true;
             }
             else if (!triedEast)
             {
+                currentDirection = "e";
                 targetGuess = hits.get(hits.size() - 1);
                 targetGuess.column = targetGuess.column + 1;
-                triedEast = true;
+                removeCDN(targetGuess);
+                //triedEast = true;
             }
             else if (!triedWest)
             {
+                currentDirection = "w";
                 targetGuess = hits.get(hits.size() - 1);
                 targetGuess.column = targetGuess.column - 1;
-                triedWest = true;
+                removeCDN(targetGuess);
+                //triedWest = true;
+
+
             }
             else
             {
                 // all directions tried
-                triedNorth = false;
-                triedSouth = false;
-                triedEast = false;
-                triedWest = false;
-                hits.clear();
-                firstHit = null;
+                // determine if ship is sunk
+                // if stuck in a direction for a certain count jump by 2
+
+
             }
 
 
 
-
+            System.out.println("makeGuess: currentDirection: " + currentDirection);
             return targetGuess;
         }
         // Hunting mode
@@ -209,6 +222,17 @@ public class GreedyGuessPlayer  implements Player{
         return guessLocal;
     } // end of makeGuess()
 
+    public void removeCDN(Guess guess)
+    {
+        for (int i = 0; i < tmp.size(); i++)
+        {
+            if (tmp.get(i).column == guess.column && tmp
+                    .get(i).row == guess.row)
+            {
+                tmp.remove(i);
+            }
+        }
+    }
     @Override
     public void update(Guess guess, Answer answer)
     {
@@ -220,6 +244,7 @@ public class GreedyGuessPlayer  implements Player{
                 hits.add(guess);
                 firstHit = guess;
                 inTargetMode = true;
+
             }
             else
             {
@@ -227,8 +252,43 @@ public class GreedyGuessPlayer  implements Player{
                 if (inTargetMode)
                 {
                     goToFirstGuess = true;
+                    if (currentDirection.equalsIgnoreCase("n"))
+                    {
+                        triedNorth = true;
+                    }
+                    else if(currentDirection.equalsIgnoreCase("s"))
+                    {
+                        triedSouth = true;
+                    }
+                    else if(currentDirection.equalsIgnoreCase("e"))
+                    {
+                        triedEast = true;
+                    }
+                    else if (currentDirection.equalsIgnoreCase("w"))
+                    {
+                        triedWest = true;
+                    }
+
                 }
             }
+        }
+        else
+        {
+
+
+            for (int i = 0; i < shipLoc.size(); i++)
+            {
+                ship = shipLoc.get(i).ship;
+                if (ship.name().equalsIgnoreCase(answer.shipSunk.name()))
+                {
+                    shipLoc.remove(i);
+                }
+            }
+            inTargetMode = false;
+            triedEast = false;
+            triedWest = false;
+            triedNorth = false;
+            triedSouth = false;
         }
 
 
@@ -241,8 +301,8 @@ public class GreedyGuessPlayer  implements Player{
         // To be implemented.
 
         // dummy return
-        //return this.shipLoc.isEmpty();
-        return true;
+        return this.shipLoc.isEmpty();
+        //return true;
     } // end of noRemainingShips()
 
     public int generateRandomNum(String type)
