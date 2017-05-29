@@ -20,6 +20,7 @@ public class GreedyGuessPlayer  implements Player{
     int DIRECTIONS = 4;
     ArrayList<World.ShipLocation> shipLoc = new ArrayList<>();
     HashSet<Guess> guesses = new HashSet<>();
+    // Copy of the guesses hashset. Copied to an array list for easier iteration
     ArrayList<Guess> tmp = new ArrayList<>();
     ArrayList<Guess> hits = new ArrayList<>();
 
@@ -27,16 +28,9 @@ public class GreedyGuessPlayer  implements Player{
 
     boolean inTargetMode = false;
     boolean goToFirstGuess = false;
-    boolean triedNorth = false;
-    boolean triedSouth = false;
-    boolean triedEast = false;
-    boolean triedWest = false;
+    // Store the current direction as n,s,e,w
     String currentDirection = "none";
-    int westCount = 0;
-    int northCount = 0;
-    int eastCount = 0;
-    int southCount = 0;
-    int westMove = 1;
+
 
     @Override
     public void initialisePlayer(World world)
@@ -50,15 +44,11 @@ public class GreedyGuessPlayer  implements Player{
         }
 
 
-
-        // Generate guesses
+        // Generate guesses and add them to the tmp arraylist
         odd();
         even();
 
-
         tmp.addAll(guesses);
-
-
     }// end of initialisePlayer()
 
     // Generates coordinates for even number row and col
@@ -96,7 +86,6 @@ public class GreedyGuessPlayer  implements Player{
         }
     }
 
-    // Copied from part C
     @Override
     public Answer getAnswer(Guess guess)
     {
@@ -129,96 +118,67 @@ public class GreedyGuessPlayer  implements Player{
     } // end of getAnswer()
 
 
+    // Functions to modify the guess to go north,
+    // south, east or west
+    public Guess goNorth(Guess guess)
+    {
+        Guess newGuess = new Guess();
+
+        newGuess.row = guess.row + 1;
+
+        return newGuess;
+    }
+    public Guess goSouth(Guess guess)
+    {
+        Guess newGuess = new Guess();
+
+        newGuess.row = guess.row -1;
+
+        return newGuess;
+    }
+    public Guess goEast(Guess guess)
+    {
+        Guess newGuess = new Guess();
+
+        newGuess.column = guess.column +1;
+
+        return newGuess;
+    }
+
+
     @Override
     public Guess makeGuess()
     {
         Guess guessLocal = new Guess();
 
-
-        // Targeting mode
+        // Targeting mode. Didn't work so code was removed.
         if (inTargetMode)
         {
             //System.out.println("Targeting Mode");
             Guess targetGuess = hits.get(hits.size() - 1);
 
-            if (goToFirstGuess)
-            {
-                
-            }
-
-            if (!triedNorth)
-            {
-                currentDirection = "n";
-                targetGuess = hits.get(hits.size() - 1);
-                targetGuess.row = targetGuess.row + 1;
-                northCount++;
-                removeCDN(targetGuess);
-
-                //triedNorth = true;
-            }
-            else if (!triedSouth)
-            {
-                currentDirection = "s";
-                targetGuess = hits.get(hits.size() - 1);
-                targetGuess.row = targetGuess.row - 1;
-                removeCDN(targetGuess);
-                //triedSouth = true;
-            }
-            else if (!triedEast)
-            {
-                currentDirection = "e";
-                targetGuess = hits.get(hits.size() - 1);
-                targetGuess.column = targetGuess.column + 1;
-                removeCDN(targetGuess);
-                //triedEast = true;
-            }
-            else if (!triedWest)
-            {
-                currentDirection = "w";
-                targetGuess = hits.get(hits.size() - 1);
-                targetGuess.column = targetGuess.column - 1;
-                removeCDN(targetGuess);
-                //triedWest = true;
-
-
-            }
-            else
-            {
-                // all directions tried
-                // determine if ship is sunk
-                // if stuck in a direction for a certain count jump by 2
-                inTargetMode = false;
-
-            }
-
-
-
-            System.out.println("makeGuess: currentDirection: " + currentDirection);
             return targetGuess;
         }
+
         // Hunting mode
         else
         {
-
-            //System.out.println("Hunting Mode");
+            // Only go hunting if there are coordinates in the tmp arraylist
             if (tmp.size() > 0)
             {
+                // Genrate a random index number from the tmp arraylist
                 int index = generateRandomNum("guess");
 
                 guessLocal = tmp.get(index);
-
+                // Remove the guess after it has been tried.
                 tmp.remove(index);
             }
-
-
-            //System.out.println(guessLocal.toString())
-
-
 
         }
         return guessLocal;
     } // end of makeGuess()
 
+    // Generic funstion to remove coordinates form the tmp arraylist
     public void removeCDN(Guess guess)
     {
         for (int i = 0; i < tmp.size(); i++)
@@ -240,7 +200,7 @@ public class GreedyGuessPlayer  implements Player{
             {
                 hits.add(guess);
                 firstHit = guess;
-                inTargetMode = true;
+                //inTargetMode = true;
 
             }
             else
@@ -248,7 +208,7 @@ public class GreedyGuessPlayer  implements Player{
                 // set new direction
                 if (inTargetMode)
                 {
-                    goToFirstGuess = true;
+                    /*goToFirstGuess = true;
                     if (currentDirection.equalsIgnoreCase("n"))
                     {
                         triedNorth = true;
@@ -264,7 +224,7 @@ public class GreedyGuessPlayer  implements Player{
                     else if (currentDirection.equalsIgnoreCase("w"))
                     {
                         triedWest = true;
-                    }
+                    }*/
 
                 }
             }
@@ -282,10 +242,10 @@ public class GreedyGuessPlayer  implements Player{
                 }
             }
             inTargetMode = false;
-            triedEast = false;
+            /*triedEast = false;
             triedWest = false;
             triedNorth = false;
-            triedSouth = false;
+            triedSouth = false;*/
             currentDirection = "none";
             goToFirstGuess = false;
         }
@@ -297,12 +257,12 @@ public class GreedyGuessPlayer  implements Player{
     @Override
     public boolean noRemainingShips()
     {
-        // To be implemented.
 
-        // dummy return
         return this.shipLoc.isEmpty();
-        //return true;
+
     } // end of noRemainingShips()
+
+    // Generic function to generate random numbers
 
     public int generateRandomNum(String type)
     {
@@ -330,150 +290,6 @@ public class GreedyGuessPlayer  implements Player{
         return result;
     }
 
-    // Ignore needs to be removed
-    class TargetMode
-    {
-        // North row + 1
-        int north = 1;
-        // East  col + 1
-        int east = 1;
-        // South  col - 1
-        int south = 1;
-        // West row -1
-        int west = 1;
-
-        String lastDirection;
-
-        ArrayList<Guess> tried = new ArrayList<>();
-        Guess nextGuess;
-        Guess firstHit;
-        Guess lastGuess;
-        boolean isFirstHit = true;
-
-
-        public TargetMode(ArrayList<Guess> hits)
-        {
-            tried.addAll(hits);
-            this.firstHit = tried.get(0);
-        }
-
-
-
-        public Guess goNorth()
-        {
-            nextGuess = tried.get(tried.size() - 1);
-            nextGuess.row = nextGuess.row + north;
-            tried.add(nextGuess);
-            this.lastDirection = "n";
-            lastGuess = nextGuess;
-            return nextGuess;
-        }
-
-        public Guess goEast()
-        {
-            nextGuess = tried.get(tried.size() - 1);
-            nextGuess.column = nextGuess.column + east;
-            this.lastDirection = "e";
-            tried.add(nextGuess);
-            lastGuess = nextGuess;
-            return nextGuess;
-        }
-
-        public Guess goSouth()
-        {
-            nextGuess = tried.get(tried.size() - 1);
-            nextGuess.row = nextGuess.row - south;
-            this.lastDirection = "s";
-            tried.add(nextGuess);
-            lastGuess = nextGuess;
-            return nextGuess;
-        }
-
-        public Guess goWest()
-        {
-            nextGuess = tried.get(tried.size() - 1);
-            nextGuess.column = nextGuess.column - west;
-            this.lastDirection = "w";
-            tried.add(nextGuess);
-            lastGuess = nextGuess;
-            return nextGuess;
-        }
-
-        public Guess processNextGuess(Guess guess, String lastDirection)
-        {
-            guess = firstHit;
-
-            if (lastDirection.equalsIgnoreCase("n"))
-            {
-                this.setLastDirection("s");
-            }
-            else if (lastDirection.equalsIgnoreCase("e"))
-            {
-                this.setLastDirection("w");
-            }
-            else if (lastDirection.equalsIgnoreCase("s"))
-            {
-                this.setLastDirection("n");
-            }
-            else if (lastDirection.equalsIgnoreCase("w"))
-            {
-                this.setLastDirection("e");
-            }
-
-
-            return guess;
-        }
-
-        public String getLastDirection()
-        {
-            return this.lastDirection;
-        }
-
-        public void setLastDirection(String direction)
-        {
-            this.lastDirection = direction;
-        }
-
-        public Guess getFirstHit()
-        {
-            return this.firstHit;
-        }
-
-        public Guess getRecentHit()
-        {
-            return tried.get(tried.size() - 1);
-        }
-
-        public void setIsFirstHit(boolean isFirstHit)
-        {
-            this.isFirstHit = isFirstHit;
-        }
-
-        public boolean getIsFirstHit()
-        {
-            return isFirstHit;
-        }
-
-        public ArrayList getTried()
-        {
-            return this.tried;
-        }
-
-        public Guess getNextGuess()
-        {
-            return nextGuess;
-        }
-
-        public Guess getLastGuess()
-        {
-            return lastGuess;
-        }
-
-        public void addTried(Guess guess)
-        {
-            tried.add(guess);
-        }
-    }
 } // end of class GreedyGuessPlayer
 
 
