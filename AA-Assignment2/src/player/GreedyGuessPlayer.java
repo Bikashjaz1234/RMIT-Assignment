@@ -18,18 +18,19 @@ public class GreedyGuessPlayer  implements Player{
     World world;
     int maxGuesses = -1;
     int DIRECTIONS = 4;
-    //ArrayList<Guess> guesses = new ArrayList<>();
     ArrayList<World.ShipLocation> shipLoc = new ArrayList<>();
     HashSet<Guess> guesses = new HashSet<>();
     ArrayList<Guess> tmp = new ArrayList<>();
     ArrayList<Guess> hits = new ArrayList<>();
-    ArrayList<Guess> target = new ArrayList<>();
-    String lastDirection = "none";
+
     Guess firstHit;
-    String newDirection = "none";
-    ArrayList<String> currentShip = new ArrayList<>();
+
     boolean inTargetMode = false;
     boolean goToFirstGuess = false;
+    boolean triedNorth = false;
+    boolean triedSouth = false;
+    boolean triedEast = false;
+    boolean triedWest = false;
 
     @Override
     public void initialisePlayer(World world)
@@ -60,6 +61,7 @@ public class GreedyGuessPlayer  implements Player{
 
     }// end of initialisePlayer()
 
+    // Generates coordinates for even number row and col
     public void even()
     {
 
@@ -77,6 +79,7 @@ public class GreedyGuessPlayer  implements Player{
 
 
     }
+    // Generates coordinates for odd row and col
     public void odd()
     {
 
@@ -93,6 +96,7 @@ public class GreedyGuessPlayer  implements Player{
         }
     }
 
+    // Copied from part C
     @Override
     public Answer getAnswer(Guess guess)
     {
@@ -108,7 +112,6 @@ public class GreedyGuessPlayer  implements Player{
                 if (cdn.row == guess.row && cdn.column == guess.column)
                 {
                     answer.isHit = true;
-                    System.out.println("answer: HIT");
                     cdns.remove(m);
                     // check whether current ship is sunk
                     if (cdns.isEmpty())
@@ -129,7 +132,6 @@ public class GreedyGuessPlayer  implements Player{
     @Override
     public Guess makeGuess()
     {
-        //System.out.println("makeGuess: hits " + hits.size());
         Guess guessLocal = new Guess();
         // Targeting mode
         if (inTargetMode)
@@ -144,8 +146,40 @@ public class GreedyGuessPlayer  implements Player{
                 hits.add(targetGuess);
             }
 
-            
-            targetGuess.row = targetGuess.row - 1;
+            if (!triedNorth)
+            {
+                targetGuess = hits.get(hits.size() - 1);
+                targetGuess.row = targetGuess.row + 1;
+                triedNorth = true;
+            }
+            else if (!triedSouth)
+            {
+                targetGuess = hits.get(hits.size() - 1);
+                targetGuess.row = targetGuess.row - 1;
+                triedSouth = true;
+            }
+            else if (!triedEast)
+            {
+                targetGuess = hits.get(hits.size() - 1);
+                targetGuess.column = targetGuess.column + 1;
+                triedEast = true;
+            }
+            else if (!triedWest)
+            {
+                targetGuess = hits.get(hits.size() - 1);
+                targetGuess.column = targetGuess.column - 1;
+                triedWest = true;
+            }
+            else
+            {
+                // all directions tried
+                triedNorth = false;
+                triedSouth = false;
+                triedEast = false;
+                triedWest = false;
+                hits.clear();
+                firstHit = null;
+            }
 
 
 
@@ -175,39 +209,6 @@ public class GreedyGuessPlayer  implements Player{
         return guessLocal;
     } // end of makeGuess()
 
-    public Guess getDirection(Guess currentGuess)
-    {
-        Guess newGuess = new Guess();
-
-
-        if (currentShip.size() == 0)
-        {
-            newDirection = "n";
-            newGuess.row = currentGuess.row + 1;
-            lastDirection = "n";
-            currentShip.add(lastDirection);
-        }
-        else
-        {
-            for (int i = 0; i < currentShip.size(); i++)
-            {
-                if (currentShip.get(i).equalsIgnoreCase("n"))
-                {
-                    newDirection = "s";
-                    lastDirection = "s";
-                    currentShip.add(newDirection);
-                    newGuess.row = currentGuess.row -1;
-                }
-
-            }
-        }
-
-
-        return newGuess;
-    }
-
-
-
     @Override
     public void update(Guess guess, Answer answer)
     {
@@ -219,8 +220,6 @@ public class GreedyGuessPlayer  implements Player{
                 hits.add(guess);
                 firstHit = guess;
                 inTargetMode = true;
-                System.out.println("update : HIT");
-                System.out.println("update: lastDirection: " + lastDirection);
             }
             else
             {
@@ -272,6 +271,7 @@ public class GreedyGuessPlayer  implements Player{
         return result;
     }
 
+    // Ignore needs to be removed
     class TargetMode
     {
         // North row + 1
