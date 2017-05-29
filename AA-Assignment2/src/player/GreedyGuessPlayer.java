@@ -42,7 +42,7 @@ public class GreedyGuessPlayer  implements Player{
     public void initialisePlayer(World world)
     {
         this.world = world;
-        maxGuesses = world.numRow * world.numColumn / 2;
+        maxGuesses = world.numRow * world.numColumn;
         // ship locations
         for (int i = 0; i < world.shipLocations.size(); i++)
         {
@@ -143,10 +143,7 @@ public class GreedyGuessPlayer  implements Player{
 
             if (goToFirstGuess)
             {
-                System.out.println("gotofirstguess");
-                targetGuess = firstHit;
-                hits.clear();
-                hits.add(targetGuess);
+                
             }
 
             if (!triedNorth)
@@ -190,7 +187,7 @@ public class GreedyGuessPlayer  implements Player{
                 // all directions tried
                 // determine if ship is sunk
                 // if stuck in a direction for a certain count jump by 2
-
+                inTargetMode = false;
 
             }
 
@@ -289,6 +286,8 @@ public class GreedyGuessPlayer  implements Player{
             triedWest = false;
             triedNorth = false;
             triedSouth = false;
+            currentDirection = "none";
+            goToFirstGuess = false;
         }
 
 
