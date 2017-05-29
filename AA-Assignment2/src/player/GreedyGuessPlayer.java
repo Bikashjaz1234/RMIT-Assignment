@@ -3,7 +3,6 @@ package player;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.Scanner;
 
 import ship.Ship;
 import world.World;
@@ -25,16 +24,18 @@ public class GreedyGuessPlayer  implements Player{
     ArrayList<Guess> tmp = new ArrayList<>();
     ArrayList<Guess> hits = new ArrayList<>();
     ArrayList<Guess> target = new ArrayList<>();
-    ArrayList<TargetMode> targetList = new ArrayList<>();
-    ArrayList<Guess> nextGuess = new ArrayList<>();
-
+    String lastDirection = "none";
+    Guess firstHit;
+    String newDirection = "none";
+    ArrayList<String> currentShip = new ArrayList<>();
+    boolean inTargetMode = false;
+    boolean goToFirstGuess = false;
 
     @Override
     public void initialisePlayer(World world)
     {
         this.world = world;
-        maxGuesses = world.numRow * world.numColumn;
-        System.out.println("maxGuesses: " + maxGuesses);
+        maxGuesses = world.numRow * world.numColumn / 2;
         // ship locations
         for (int i = 0; i < world.shipLocations.size(); i++)
         {
@@ -48,36 +49,13 @@ public class GreedyGuessPlayer  implements Player{
 
         }
 
-        int startRow = 0;
-        int startCol = 0;
 
-        /*for (startRow = 0; startRow < world.numRow;)
-        {
-            for (startCol = 0; startCol < world.numColumn;)
-            {
-
-                Guess guess = new Guess();
-                guess.row = startRow;
-                guess.column = startCol;
-
-                guesses.add(guess);
-            }
-        }*/
         // Generate guesses
-        even();
         odd();
+        even();
+
 
         tmp.addAll(guesses);
-
-        /*for (int i = 0; i < tmp.size(); i++)
-        {
-            System.out.println(tmp.get(i).row + ":" + tmp.get(i).column);
-            System.out.println();
-        }
-
-        System.out.println("guesses size: " + guesses.size());*/
-
-
 
 
     }// end of initialisePlayer()
@@ -118,7 +96,6 @@ public class GreedyGuessPlayer  implements Player{
     @Override
     public Answer getAnswer(Guess guess)
     {
-        System.out.println("Answer");
         Answer answer = new Answer();
         ArrayList<World.Coordinate> cdns;
         World.Coordinate cdn;
@@ -128,19 +105,20 @@ public class GreedyGuessPlayer  implements Player{
             ship = this.shipLoc.get(i).ship;
             for (int m = 0; m < cdns.size(); m++) {
                 cdn = cdns.get(m);
-                if (cdn.row == guess.row && cdn.column == guess.column) {
+                if (cdn.row == guess.row && cdn.column == guess.column)
+                {
                     answer.isHit = true;
-                    hits.add(guess);
-                    TargetMode recordTarget = new TargetMode(hits);
-                    targetList.add(recordTarget);
+                    System.out.println("answer: HIT");
                     cdns.remove(m);
                     // check whether current ship is sunk
-                    if (cdns.isEmpty()) {
+                    if (cdns.isEmpty())
+                    {
                         answer.shipSunk = ship;
                         this.shipLoc.remove(i);
                         return answer;
                     }
                 }
+
             }
         }// end for loop
 
@@ -151,106 +129,110 @@ public class GreedyGuessPlayer  implements Player{
     @Override
     public Guess makeGuess()
     {
+        //System.out.println("makeGuess: hits " + hits.size());
         Guess guessLocal = new Guess();
-        // Hunting mode
-        if (hits.size() == 0)
+        // Targeting mode
+        if (inTargetMode)
         {
-            System.out.println("Hunting Mode");
-            int index = generateRandomNum("guess");
+            //System.out.println("Targeting Mode");
+            Guess targetGuess = hits.get(hits.size() - 1);
 
-            guessLocal = tmp.get(index);
+            if (goToFirstGuess)
+            {
+                targetGuess = firstHit;
+                hits.clear();
+                hits.add(targetGuess);
+            }
 
-            tmp.remove(index);
+            
+            targetGuess.row = targetGuess.row - 1;
 
-            //System.out.println(guessLocal.toString());
+
+
+
+            return targetGuess;
         }
-        // Targeted mode
+        // Hunting mode
         else
         {
-            System.out.println("Targeting Mode");
 
-            TargetMode targetMode = targetList.get(targetList.size() - 1);
-
-
-            // Choose random direction for next hit
-            if (targetMode.isFirstHit == true)
+            //System.out.println("Hunting Mode");
+            if (tmp.size() > 0)
             {
-                int direction = generateRandomNum("dir");
+                int index = generateRandomNum("guess");
 
-                if (direction == 0)
-                {
-                    guessLocal = targetMode.goNorth();
-                    targetMode.setLastDirection("n");
-                    targetMode.setIsFirstHit(false);
-                }
-                else if (direction == 1)
-                {
-                    guessLocal = targetMode.goEast();
-                    targetMode.setLastDirection("e");
-                    targetMode.setIsFirstHit(false);
-                }
-                else if (direction == 2)
-                {
-                    guessLocal = targetMode.goSouth();
-                    targetMode.setLastDirection("s");
-                    targetMode.setIsFirstHit(false);
-                }
-                else if (direction == 3)
-                {
-                    guessLocal = targetMode.goWest();
-                    targetMode.setLastDirection("w");
-                    targetMode.setIsFirstHit(false);
-                }
+                guessLocal = tmp.get(index);
+
+                tmp.remove(index);
             }
-            else
-            {
-                if (targetMode.getLastDirection().equalsIgnoreCase("n"))
-                {
-                    guessLocal = targetMode.goNorth();
-                }
-                else if (targetMode.getLastDirection().equalsIgnoreCase("e"))
-                {
-                    guessLocal = targetMode.goEast();
-                }
-                else if(targetMode.getLastDirection().equalsIgnoreCase("s"))
-                {
-                    guessLocal = targetMode.goSouth();
-                }
-                else if (targetMode.getLastDirection().equalsIgnoreCase("w"))
-                {
-                    guessLocal = targetMode.goWest();
-                }
-                else
-                {
-                    Guess tmp = nextGuess.get(0);
-                    guessLocal = targetMode.processNextGuess(tmp, targetMode.getLastDirection());
-                }
-            }
+
+
+            //System.out.println(guessLocal.toString())
+
+
 
         }
         return guessLocal;
     } // end of makeGuess()
+
+    public Guess getDirection(Guess currentGuess)
+    {
+        Guess newGuess = new Guess();
+
+
+        if (currentShip.size() == 0)
+        {
+            newDirection = "n";
+            newGuess.row = currentGuess.row + 1;
+            lastDirection = "n";
+            currentShip.add(lastDirection);
+        }
+        else
+        {
+            for (int i = 0; i < currentShip.size(); i++)
+            {
+                if (currentShip.get(i).equalsIgnoreCase("n"))
+                {
+                    newDirection = "s";
+                    lastDirection = "s";
+                    currentShip.add(newDirection);
+                    newGuess.row = currentGuess.row -1;
+                }
+
+            }
+        }
+
+
+        return newGuess;
+    }
 
 
 
     @Override
     public void update(Guess guess, Answer answer)
     {
-        TargetMode targetMode;
-        System.out.println("update: targetList " + targetList.size());
-        if (answer.isHit)
+        Ship ship;
+        if (answer.shipSunk == null)
         {
-            targetMode = targetList.get(targetList.size() - 1);
-            guess = targetMode.getLastGuess();
-            nextGuess.add(guess);
-
+            if (answer.isHit)
+            {
+                hits.add(guess);
+                firstHit = guess;
+                inTargetMode = true;
+                System.out.println("update : HIT");
+                System.out.println("update: lastDirection: " + lastDirection);
+            }
+            else
+            {
+                // set new direction
+                if (inTargetMode)
+                {
+                    goToFirstGuess = true;
+                }
+            }
         }
-        else
-        {
-            answer.isHit = false;
-            targetList.clear();
 
-        }
+
     } // end of update()
 
 
@@ -260,7 +242,8 @@ public class GreedyGuessPlayer  implements Player{
         // To be implemented.
 
         // dummy return
-        return this.shipLoc.isEmpty();
+        //return this.shipLoc.isEmpty();
+        return true;
     } // end of noRemainingShips()
 
     public int generateRandomNum(String type)
