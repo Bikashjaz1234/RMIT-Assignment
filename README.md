@@ -14,7 +14,7 @@ Network Programming-Lab2    10/10</br>
 Network Programming-Lab3    9.6/10</br>
 Network Programming-Lab4    10/10</br>
 Network Programming-Lab5    9/10</br>
-
+Network Programming-Lab5    86/100</br>
 Harold Zang
 
 
