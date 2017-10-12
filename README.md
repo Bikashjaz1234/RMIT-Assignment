@@ -1,7 +1,8 @@
 # RMIT-Assignment
+AA-Assignment1              14/15</br>
+AA-Assignment2              14/15</br>
 APT-Assignment1             94/100</br>
 APT-Assignment2             98/100+14/20bonus</br>
-AA-Assignment1              14/15</br>
 CloudComputing-A1           15/15</br>
 Programming Techniques-A1   19.5/20</br>
 Programming Techniques-A2   29.5/30</br>
@@ -16,7 +17,7 @@ Network Programming-Lab4    10/10</br>
 Network Programming-Lab5    9/10</br>
 Network Programming Assignment  86/100</br>
 Operating Systems Principles-A1 25/25</br>
-Operating Systems Principles-A2
+Operating Systems Principles-A2 </br>
 Harold Zang
 
 
