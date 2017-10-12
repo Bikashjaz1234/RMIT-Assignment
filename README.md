@@ -15,6 +15,8 @@ Network Programming-Lab3    9.6/10</br>
 Network Programming-Lab4    10/10</br>
 Network Programming-Lab5    9/10</br>
 Network Programming Assignment  86/100</br>
+Operating Systems Principles-A1 25/25</br>
+Operating Systems Principles-A2
 Harold Zang
 
 
