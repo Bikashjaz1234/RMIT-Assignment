@@ -1,0 +1,1 @@
+cmd_/home/ospass2/test/s3534987Device.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/ospass2/test/s3534987Device.ko /home/ospass2/test/s3534987Device.o /home/ospass2/test/s3534987Device.mod.o

@@ -1,0 +1,1 @@
+cmd_/home/ospass2/test/usbdirver/usbmouse.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/ospass2/test/usbdirver/usbmouse.ko /home/ospass2/test/usbdirver/usbmouse.o /home/ospass2/test/usbdirver/usbmouse.mod.o ;  true
