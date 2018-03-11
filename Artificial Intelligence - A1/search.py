@@ -87,7 +87,23 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #print "Start:", problem.getStartState()
+    #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    #print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    start = problem.getStartState()
+    path = util.Stack()
+    isVisited = {}
+
+    dfs_recurse(problem, start, path, isVisited)
+    direction = []
+
+    while not path.isEmpty():
+        node = path.pop()
+        #print node
+        direction.insert(0, node[1])
+
+    return direction
+    #util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -111,6 +127,17 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+def dfs_recurse(problem, start, path, isVisited):
+    isVisited[start] = True
+    if problem.isGoalState(start):
+        return True
+    else:
+        for successor in problem.getSuccessors(start):
+            if successor[0] not in isVisited:
+                path.push(successor)
+                if dfs_recurse(problem, successor[0], path, isVisited):
+                    return True
+    path.pop()
 
 # Abbreviations
 bfs = breadthFirstSearch
