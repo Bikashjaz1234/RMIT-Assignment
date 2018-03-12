@@ -3,6 +3,7 @@ AA-Assignment1              14/15</br>
 AA-Assignment2              14/15</br>
 APT-Assignment1             94/100</br>
 APT-Assignment2             98/100+14/20bonus</br>
+Artificial Intelligence-A0  3/3</br>
 CloudComputing-A1           15/15</br>
 CloudComputing-A2           35/35</br>
 Programming Techniques-A1   19.5/20</br>
