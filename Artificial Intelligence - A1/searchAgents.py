@@ -288,6 +288,11 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        cornerList = [] # record the corner that we have counter
+        if self.startingPosition in self.corners:
+            cornerList.append(self.startingPosition)
+        # init the start state
+        self.startState = (self.startingPosition, tuple(cornerList))
 
     def getStartState(self):
         """
@@ -295,14 +300,18 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #print self.startState
+        return self.startState
+        #util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        cornerList = list(state[1])
+        return len(cornerList) == 4
+        #util.raiseNotDefined()
 
     def getSuccessors(self, state):
         """
@@ -325,6 +334,17 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x, y = state[0]
+            cornerList = list(state[1])
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                # check (nextx, nexty) is the corner that we have not meeted before
+                if (nextx, nexty) in self.corners and (nextx, nexty) not in cornerList:
+                    cornerList.append((nextx, nexty))
+                successors.append((((nextx, nexty), tuple(cornerList)), action, 0))
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors

@@ -114,17 +114,23 @@ def breadthFirstSearch(problem):
     current_state = start
     path = {}
     isVisited = {}
+    flagBFS = False
 
     # direction, cost, parent
     path[start] = [None, 0, None]
     
     isVisited[current_state] = True
     queue.push(current_state)
+    
+    
 
     while not queue.isEmpty():
-        current_state = queue.pop()
+    	
+    	if flagBFS == False:
+    		current_state = queue.pop()
         
         if problem.isGoalState(current_state):
+            flagBFS = True
             break
 
         for successor in problem.getSuccessors(current_state):
