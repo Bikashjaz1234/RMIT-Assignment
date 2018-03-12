@@ -152,7 +152,54 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    queue = util.PriorityQueue()
+    start = problem.getStartState()
+
+    # current node && cost
+    current_state = (start, 0)
+
+    path = {}
+    # direction, cost, parent
+    path[start] = [None, 0, None]
+
+    queue.push(current_state, current_state[1])
+
+    while not queue.isEmpty():
+        current_state = queue.pop()
+        if problem.isGoalState(current_state[0]):
+            break
+
+        for successor in problem.getSuccessors(current_state[0]):
+            
+            successor_name = successor[0]
+            d = successor[1]
+            c = successor[2]
+            #print successor[0]
+            #print successor[1]
+            #print successor[2]
+
+            if successor_name not in path:
+                successor = (successor_name, successor[2]+current_state[1])
+                queue.push(successor, successor[1])
+                path[successor_name] = [d, successor[1], current_state[0]]
+                
+            else:
+                if current_state[1] + c < path[successor_name][1]:
+                    path[successor_name][0] = d
+                    path[successor_name][1] = current_state[1] + c
+                    path[successor_name][2] = current_state[0]
+
+    direction = []
+
+    current_node = current_state[0]
+    while path[current_node][2] is not None:
+
+        direction.insert(0, path[current_node][0])
+        current_node = path[current_node][2]
+
+    return direction
+    #util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -164,7 +211,68 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    INF = 2**31
+    start = problem.getStartState()
+
+    closedSet = set()
+    openSet = set()
+    queue = util.PriorityQueue()
+
+
+    gScore = {}
+    gScore[start] = 0
+
+    fScore = {}
+    fScore[start] = gScore.get(start, INF) + heuristic(start, problem)
+
+    #direction, parent
+    path = {start:(None, None)}
+
+    queue.push(start, fScore.get(start, INF))
+    openSet.add(start)
+
+    while not queue.isEmpty():
+        current_state = queue.pop()
+
+        if problem.isGoalState(current_state):
+            break
+
+        openSet.remove(current_state)
+        closedSet.add(current_state)
+
+        for successor in problem.getSuccessors(current_state):
+            neigh_node = successor[0]
+            direction = successor[1]
+            cost = successor[2]
+            if neigh_node in closedSet:
+                continue
+
+            if neigh_node not in openSet:
+                openSet.add(neigh_node)
+                queue.push(neigh_node, fScore.get(neigh_node, INF))
+
+            neigh_gScore = gScore.get(current_state, INF) + cost
+            if neigh_gScore >= gScore.get(neigh_node, INF):
+                continue
+
+            path[neigh_node] = (direction, current_state)
+            gScore[neigh_node] = neigh_gScore
+            fScore[neigh_node] = gScore[neigh_node] + heuristic(neigh_node, problem)
+
+            queue.update(neigh_node, fScore.get(neigh_node, INF))
+
+
+
+    direction = []
+    current_node = current_state
+    while path[current_node][1] is not None:
+
+        direction.insert(0, path[current_node][0])
+        current_node = path[current_node][1]
+
+    return direction
+    #util.raiseNotDefined()
 
 def dfs_recurse(problem, start, path, isVisited):
     isVisited[start] = True
