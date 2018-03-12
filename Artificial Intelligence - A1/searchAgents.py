@@ -505,7 +505,41 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    currentPos = position
+
+    foodPos = []
+
+    for x in range(foodGrid.width):
+        for y in range(foodGrid.height):
+            if foodGrid[x][y]:
+                foodPos.append((x, y))
+
+
+    if len(foodPos) == 0:
+        return 0
+
+    extreme_dist = 0
+    cost = 0
+    while foodPos:
+
+        min_dist = -1
+        min_dist_pos = None
+
+        for pos in foodPos:
+            dist = util.manhattanDistance(currentPos, pos)
+            if min_dist == -1 or min_dist > dist:
+                min_dist = dist
+                min_dist_pos = pos
+
+        cost += min_dist
+        currentPos = min_dist_pos
+        foodPos.remove(min_dist_pos)
+        if extreme_dist < min_dist:
+            extreme_dist = min_dist
+
+
+    return max(cost - 0.5 * extreme_dist, 0)# Default to trivial solution
+    #return 0
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
