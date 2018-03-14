@@ -117,6 +117,12 @@ def breadthFirstSearch(problem):
     flagBFS = False
 
     # direction, cost, parent
+    '''
+    Using path dictionary to store the information,
+    then use these informaiton to create a path to the
+    end point.
+    @start is the point that it wants to go.
+    '''
     path[start] = [None, 0, None]
     
     isVisited[current_state] = True
@@ -134,7 +140,7 @@ def breadthFirstSearch(problem):
             break
 
         for successor in problem.getSuccessors(current_state):
-            neigh_node = successor[0]
+            neigh_node = successor[0] #neighbour Node
             direction = successor[1]
             cost = successor[2]
 
@@ -182,8 +188,6 @@ def uniformCostSearch(problem):
             d = successor[1]
             c = successor[2]
             #print successor[0]
-            #print successor[1]
-            #print successor[2]
 
             if successor_name not in path:
                 successor = (successor_name, successor[2]+current_state[1])
@@ -217,14 +221,13 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    
-    INF = 2**31
+    #Give INF is very big number
+    INF = 999999999999 #infinite
     start = problem.getStartState()
 
     closedSet = set()
     openSet = set()
     queue = util.PriorityQueue()
-
 
     gScore = {}
     gScore[start] = 0
