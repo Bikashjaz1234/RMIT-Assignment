@@ -132,11 +132,11 @@ def breadthFirstSearch(problem):
 
     while not queue.isEmpty():
     	
-    	if flagBFS == False:
-    		current_state = queue.pop()
+    	#if flagBFS == False:
+    	current_state = queue.pop()
         
         if problem.isGoalState(current_state):
-            flagBFS = True
+           # flagBFS = True
             break
 
         for successor in problem.getSuccessors(current_state):
