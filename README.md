@@ -1,3 +1,6 @@
+# Introduction
+This is my RMIT university assignment.
+
 # RMIT-Assignment
 AA-Assignment1              14/15</br>
 AA-Assignment2              14/15</br>
