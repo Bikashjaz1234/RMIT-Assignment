@@ -28,7 +28,7 @@ public class DataInfo {
 		String[] columesTitle = columes.split("\t");
 		for (int i = 0; i < columeVals.length; i++) {
 			if (columesTitle[i].equals(colume)) {
-				return columeVals[i].contains(subStr);
+				return columeVals[i].toLowerCase().contains(subStr.toLowerCase());
 			}
 		}
 		return false;
