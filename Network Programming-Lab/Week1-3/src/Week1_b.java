@@ -24,12 +24,13 @@ public class Week1_b {
             fr.read(c);
             String sr = CoreModule.coreCode(coreVariable, testInput);
             // Using for loop to read the file
+            //If load core module success
             if (sr.equals("TRUE")) {
                 for (char a: c)
                     System.out.print(a); // output the characters one by one
                 fr.close(); //close the buffer.
             } else {
-                System.err.println("CoreMoudle Load failed");
+                System.err.println("CoreMoudle Load failed\n" + sr);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Input file is not found");

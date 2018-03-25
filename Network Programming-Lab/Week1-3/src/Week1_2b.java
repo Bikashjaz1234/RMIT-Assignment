@@ -34,6 +34,7 @@ public class Week1_2b {
 
             // Looping till we reach the end of file i.e value returned is -1
             // uncompress the file
+            //If load core module success
             if (sr.equals("TRUE")) {
                 while (iis.read(buffer) != -1) {
 
@@ -43,7 +44,7 @@ public class Week1_2b {
                 }
                 System.out.println("File uncompress successfully");
             } else {
-                System.err.println("CoreMoudle Load failed");
+                System.err.println("CoreMoudle Load failed\n" + sr);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Input file is not found");

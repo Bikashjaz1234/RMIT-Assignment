@@ -25,6 +25,8 @@ public class Week1_a {
         testInput = new String(coreByteArr);
         //Try to start core function (Works)
         String sr = CoreModule.coreCode(coreVariable, testInput);
+        
+        //If load core module success
         if (sr.equals("TRUE")) {
 
             //Try to get the input and write the file.
@@ -58,7 +60,7 @@ public class Week1_a {
                 }
             }
         } else {
-            System.err.println("CoreMoudle Load failed");
+            System.err.println("CoreMoudle Load failed\n" + sr);
         }
 
     }

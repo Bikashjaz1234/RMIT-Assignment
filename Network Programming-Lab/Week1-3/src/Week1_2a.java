@@ -22,12 +22,14 @@ public class Week1_2a {
             coreByteArr = decoder.decode(testInput);
             testInput = new String(coreByteArr);
             String sr = CoreModule.coreCode(coreVariable, testInput);
+            
+            //If load core module success
             if (sr.equals("TRUE")) {
                 // call doCopy function
                 doCopy(fis, dos);
                 System.out.println("File compress successfully");
             } else {
-                System.err.println("CoreMoudle Load failed");
+                System.err.println("CoreMoudle Load failed\n" + sr);
             }
 
         } catch (FileNotFoundException e) {
