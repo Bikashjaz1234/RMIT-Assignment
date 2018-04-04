@@ -87,7 +87,7 @@ class ReflexAgent(Agent):
           minGhostDistance = min([manhattanDistance(ghost.getPosition(), newPos) for ghost in newGhostStates])
           if len(newFood.asList()) != 0:
             minfoodDistance = min([manhattanDistance(food, newPos) for food in newFood.asList()])
-            evalScore += minGhostDistance/minfoodDistance
+            evalScore += (minGhostDistance/minfoodDistance) * 0.2
           evalScore += successorGameState.getScore()
 
         return evalScore
