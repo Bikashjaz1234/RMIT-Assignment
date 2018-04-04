@@ -76,6 +76,7 @@ class ReflexAgent(Agent):
         "*** YOUR CODE HERE ***"
         #eturn successorGameState.getScore()
         evalScore = 0
+        secretValue = 20
 
         if action == "STOP":
         	#print "STOP!!!"
@@ -87,7 +88,7 @@ class ReflexAgent(Agent):
           minGhostDistance = min([manhattanDistance(ghost.getPosition(), newPos) for ghost in newGhostStates])
           if len(newFood.asList()) != 0:
             minfoodDistance = min([manhattanDistance(food, newPos) for food in newFood.asList()])
-            evalScore += (minGhostDistance/minfoodDistance) * 0.5
+            evalScore += (minGhostDistance/minfoodDistance) / secretValue
           evalScore += successorGameState.getScore()
 
         return evalScore
@@ -133,7 +134,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
       if currentDepth == self.depth or currentGameState.isWin() or currentGameState.isLose():
         return self.evaluationFunction(currentGameState)
 
-      score = -2**20
+      #Infinity Number
+      score = -9999999
+      
       for action in currentGameState.getLegalActions(0):
         score = max(score, self.__min(currentGameState.generateSuccessor(0, action), currentDepth, 1))
 
@@ -146,7 +149,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
       if currentGameState.isWin() or currentGameState.isLose():
         return self.evaluationFunction(currentGameState)
 
-      score = 2**20
+      #Infinity Number
+      score = 9999999
 
       for action in currentGameState.getLegalActions(nofGhost):
         # explore all ghost
