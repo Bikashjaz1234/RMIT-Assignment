@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -72,7 +72,7 @@ class ReflexAgent(Agent):
         newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-        
+
         "*** YOUR CODE HERE ***"
         #eturn successorGameState.getScore()
         evalScore = 0
@@ -87,7 +87,7 @@ class ReflexAgent(Agent):
           minGhostDistance = min([manhattanDistance(ghost.getPosition(), newPos) for ghost in newGhostStates])
           if len(newFood.asList()) != 0:
             minfoodDistance = min([manhattanDistance(food, newPos) for food in newFood.asList()])
-            evalScore += (minGhostDistance/minfoodDistance) * 0.2
+            evalScore += (minGhostDistance/minfoodDistance) * 0.5
           evalScore += successorGameState.getScore()
 
         return evalScore
@@ -201,13 +201,47 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
       Your minimax agent with alpha-beta pruning (question 3)
     """
+     #max algorithm and also the main action for alphabeta
+    def maxValue(self,state,alpha,beta,depth):
+        if depth == self.depth or state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+        V = float("-inf")
+        score = None
+        AlphaBetaAction = 'STOP'
+        for action in state.getLegalActions(0):
+            if action == 'STOP':
+                continue
+            score = max(score,self.minValue(state.generateSuccessor(0, action), alpha, beta, depth, 1))
+            if score > V:
+                V = score
+                AlphaBetaAction = action
+            if V > beta:
+                return V
+            alpha = max(alpha, V)
+        if depth == 0:
+            return AlphaBetaAction
+        else:
+           return V
+    #min algorithm
+    def minValue(self,state, alpha, beta, depth, oppGhost):
+        if depth == self.depth or state.isLose() or state.isWin():
+            return self.evaluationFunction(state)
+        score = float("inf")
+        for action in state.getLegalActions(oppGhost):
+            #explore ghost in the pacman game
+            if oppGhost == self.ghost - 1:
+                score = min(score,self.maxValue(state.generateSuccessor(oppGhost, action), alpha, beta, depth + 1))
+            else:
+                score = min(score,self.minValue(state.generateSuccessor(oppGhost, action),alpha, beta, depth, oppGhost+1))
+            if score < alpha:
+                return score
+            beta = min(beta, score)
+        return score
 
     def getAction(self, gameState):
-        """
-          Returns the minimax action using self.depth and self.evaluationFunction
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        self.ghost = gameState.getNumAgents()
+
+        return self.maxValue(gameState,float("-inf"), float("inf"),0)
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -236,4 +270,3 @@ def betterEvaluationFunction(currentGameState):
 
 # Abbreviation
 better = betterEvaluationFunction
-
