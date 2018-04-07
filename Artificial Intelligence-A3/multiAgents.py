@@ -74,7 +74,7 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        #eturn successorGameState.getScore()
+        #return successorGameState.getScore()
         evalScore = 0
         secretValue = 20
 
@@ -251,7 +251,44 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
     """
+	
+    #the value function of determine max/ exp or terminal state
+    def __value(self, state, depth, agent):
+        if depth == 0 or state.isWin() or state.isLose(): 
+            return self.evaluationFunction(state)
+		
+        if agent == 0:
+            return self.__maxScore(state, depth)
+			
+        if agent > 0 and agent < self.totalGhost:
+            return self.__expScore(state, depth, agent)
+			
+    #the max function which return max score
+    def __maxScore(self, state, depth):
 
+        score = float("-inf")
+		
+        for action in state.getLegalActions(0):
+            score = max(score, self.__value(state.generateSuccessor(0,action), depth, 1))
+        
+        return score
+	
+    #the exp function which return the average value of the ghost successor
+    def __expScore(self, state, depth, agent):
+		
+        score = 0.0
+		
+        for action in state.getLegalActions(agent):
+            prob = 1.0 / len(state.getLegalActions(agent))
+            #explore all ghost
+            if agent == self.totalGhost -1:
+                score += prob * (self.__value(state.generateSuccessor(agent, action), depth-1, 0))
+            #explore the remaining ghost
+            else:
+                score += prob * (self.__value(state.generateSuccessor(agent, action), depth, agent+1))
+		
+        return score
+	  	  
     def getAction(self, gameState):
         """
           Returns the expectimax action using self.depth and self.evaluationFunction
@@ -260,7 +297,24 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        self.totalGhost = gameState.getNumAgents()	
+        
+        allActions = gameState.getLegalActions(0)
+        maxScore = None
+        expectimaxAction = None
+
+        for action in allActions:
+            if action == 'STOP':
+                continue
+
+            currentScore = self.__value(gameState.generateSuccessor(0,action), self.depth, 1)
+            if maxScore == None or maxScore < currentScore:
+                maxScore = currentScore
+                expectimaxAction = action
+
+        return expectimaxAction
+
+        #util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -270,7 +324,43 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+	
+	#useful information get from the reflex agent function above
+    pacmanPos = currentGameState.getPacmanPosition()
+    food = currentGameState.getFood()
+    listOfFood = food.asList()
+    ghostStates = currentGameState.getGhostStates()
+    scaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
+    mysteryNum = 150
+	
+    #declare the variable 
+    foodDistance = float("inf")
+    ghostDistance = float("inf")
+    averageDistance = 1
+
+	#calculate the food distance for all the food available
+    for f in listOfFood:
+        manFoodDistance = manhattanDistance(f, pacmanPos)
+        foodDistance = min(manFoodDistance, foodDistance)
+
+    foodDistance += 1
+    foodCount = len(listOfFood) + 1
+
+    #calculate the ghost distance for all the food available
+    for g in ghostStates:
+        manGhostDistance = manhattanDistance(g.getPosition(), pacmanPos)
+        averageDistance += manGhostDistance
+        ghostDistance = min(manGhostDistance * mysteryNum, ghostDistance)
+
+    currentScore = currentGameState.getScore() + 1
+
+    if ghostDistance < 2:
+        ghostDistance = -100
+    else:
+        ghostDistance = 0
+	
+    return ghostDistance + 1.0/foodDistance + currentScore
+
 
 # Abbreviation
 better = betterEvaluationFunction
