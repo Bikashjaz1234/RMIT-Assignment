@@ -46,6 +46,24 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
 
+        for i in range(iterations):
+            #state is the position of the map
+            preValues = self.values.copy()
+            for state in self.mdp.getStates():
+                tmpAction = util.Counter()
+                # tmpValues = []
+                for action in self.mdp.getPossibleActions(state): #choose the best action
+                    tmpValues = util.Counter()
+
+                    for nState, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+                        tmpValues[nState] = (preValues[nState]*self.discount + self.mdp.getReward(state, action, nState))*prob
+
+                    # tmpValues.append(tmp)
+                    tmpAction[action] = tmpValues.totalCount()
+
+                self.values[state] = tmpAction[tmpAction.argMax()]
+                #     self.values[state] = max(tmpValues)
+
 
     def getValue(self, state):
         """
@@ -58,9 +76,17 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
           Compute the Q-value of action in state from the
           value function stored in self.values.
+
+          returns the Q-value of the (state, action) pair given by the value function given by self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        tmpValues = util.Counter()
+
+        for nState, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+            tmpValues[nState] = (self.values[nState]*self.discount + self.mdp.getReward(state, action, nState))*prob
+
+        return tmpValues.totalCount()
 
     def computeActionFromValues(self, state):
         """
@@ -70,9 +96,17 @@ class ValueIterationAgent(ValueEstimationAgent):
           You may break ties any way you see fit.  Note that if
           there are no legal actions, which is the case at the
           terminal state, you should return None.
+
+           computes the best action according to the value function given by self.values
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        tmpAction = util.Counter()
+        
+        for action in self.mdp.getPossibleActions(state):
+            tmpAction[action] = self.computeQValueFromValues(state, action)
+
+        return tmpAction.argMax()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
