@@ -77,9 +77,9 @@ public class DBIndexCreator {
 				dataCounter--;
 				dataLine = new String(data);
 				colVal = info.getColumeVals("BN_NAME", dataLine);
-				hashcode = processor.hashCode(colVal, 0);
+				hashcode = processor.hashCode(colVal);
 
-				processor.addOffset(colVal, hashcode, offset, 2);
+				processor.addOffset(hashcode, offset);
 
 				curOffsetInPage += dataSize;
 				offset += dataSize;

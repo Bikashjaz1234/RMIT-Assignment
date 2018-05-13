@@ -61,7 +61,7 @@ public class DBIndexQuery {
 	private void indexQuery(int pageSize, File indexFile, File heapFile, HashBucketProcessor processor,
 			String searchingStr) {
 		DataInputStream dis = null, indexDis = null;
-		int dataSize, titleSize, hashcode, bucketSize = 8, indexOffset, preIndexOffset = 0, indexSkipOffset, recordAmount, hashTimes = 3, index;
+		int dataSize, titleSize, hashcode, bucketSize = 8, indexOffset, recordAmount;
 		long dataOffset, preOffset = 0, skipOffset;
 		byte[] data;
 		DataInfo info = new DataInfo();
@@ -79,49 +79,23 @@ public class DBIndexQuery {
 			processor.setSlotSize((int) (recordAmount / 0.7));
 			data = new byte[dataSize];
 
+			// get target offset
+			hashcode = processor.hashCode(searchingStr);
+			indexOffset = hashcode * bucketSize;
+			indexDis.skipBytes(indexOffset);
 			System.out.println("Searching...");
-			
-			index = 0;
-			while (index < hashTimes) {
-				// get target offset
-				hashcode = processor.hashCode(searchingStr, index);
-				indexOffset = hashcode * bucketSize;
-				indexSkipOffset = indexOffset - preIndexOffset;
-				indexDis.skipBytes(indexSkipOffset);
-				
-				if (index < hashTimes - 1) {
-					dataOffset = indexDis.readLong();
-					if (dataOffset != -1) {
-						skipOffset = dataOffset - preOffset;
-						dis.skip(skipOffset);
-						dis.read(data);
-						dataLine = new String(data);
-						colVal = info.getColumeVals(col, dataLine);
+			while ((dataOffset = indexDis.readLong()) != -1) {
+				skipOffset = dataOffset - preOffset;
+				dis.skip(skipOffset);
+				dis.read(data);
+				dataLine = new String(data);
+				colVal = info.getColumeVals(col, dataLine);
 
-						if (colVal.equals(searchingStr)) {
-							info.printData(dataLine);
-							return;
-						}
-						preOffset = dataOffset + dataSize;
-						preIndexOffset = indexOffset + 8;
-					}
-					index++;
-				} else {
-					while ((dataOffset = indexDis.readLong()) != -1) {
-						skipOffset = dataOffset - preOffset;
-						dis.skip(skipOffset);
-						dis.read(data);
-						dataLine = new String(data);
-						colVal = info.getColumeVals(col, dataLine);
-
-						if (colVal.equals(searchingStr)) {
-							info.printData(dataLine);
-							return;
-						}
-						preOffset = dataOffset + dataSize;
-					}
-					index++;
+				if (colVal.equals(searchingStr)) {
+					info.printData(dataLine);
+					return;
 				}
+				preOffset = dataOffset + dataSize;
 			}
 
 			System.out.println("Can't find result");

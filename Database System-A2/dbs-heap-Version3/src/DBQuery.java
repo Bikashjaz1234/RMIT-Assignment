@@ -85,7 +85,6 @@ public class DBQuery {
 					dataStr = new String(data).trim();
 					if (info.isSubStringInTragetColume(searchingWord, targetTitle, dataStr)) {
 						result.add(dataStr);
-						return result;
 					}
 				}
 			}
