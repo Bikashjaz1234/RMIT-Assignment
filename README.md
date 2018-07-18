@@ -1,5 +1,5 @@
 # Introduction
-This is my RMIT university assignment.
+This is my RMIT university assignment. I am graduate, so this repo no longer private.
 
 # RMIT-Assignment
 AA-Assignment1              14/15</br>
